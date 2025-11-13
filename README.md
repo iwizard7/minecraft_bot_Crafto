@@ -1,190 +1,365 @@
-# Steve
+# Crafto AI Minecraft Bot 🤖
 
+![Crafto AI Demo](https://github.com/user-attachments/assets/23f0ccdd-7a7a-4d49-9dd9-215ebf67265a)
 
-https://github.com/user-attachments/assets/23f0ccdd-7a7a-4d49-9dd9-215ebf67265a
+**Crafto AI** - это интеллектуальный Minecraft бот, который использует искусственный интеллект для выполнения команд на естественном языке. Вместо помощи в написании кода, вы получаете AI агентов, которые реально играют в игру вместе с вами.
 
-We built Cursor for Minecraft. Instead of AI that helps you write code, you get AI agents that actually play the game with you.
+## 🎯 Что умеет Crafto
 
-## What It Does
+Crafto действует как агент (или серия агентов), который понимает контекст и выполняет ваши команды. Вы описываете что хотите, а он понимает и делает - только вместо редактирования кода, вы получаете воплощенных Crafto, которые работают в вашем мире Minecraft.
 
-Steve acts as an Agent, or a series of Agents if you choose to employ all of them. You describe what you want, and he understands the context and executes. Same concept here, except instead of code editing, you get embodied Steves that operate in your Minecraft world.
+### 🏗️ Строительство
+- **13 типов строений** с настраиваемыми размерами
+- **Коллаборативное строительство** - несколько ботов работают вместе
+- **Автоматическое планирование** структур
+- **Умное размещение блоков** с проверкой коллизий
 
-The interface is simple: press K to open a panel, type what you need. The agents handle the interpretation, planning, and execution. Say "mine some iron" and the agent reasons about where iron spawns, navigates to the appropriate depth, locates ore veins, and extracts the resources. Ask for a house and it considers the available materials, generates an appropriate structure, and builds it block by block.
+### ⚔️ Боевая система
+- **Автоматическая защита игрока** при обнаружении угрозы
+- **Охота на мобов** по команде
+- **Стратегическое позиционирование** в бою
+- **Система приоритетов целей**
 
-What makes this interesting is the multi-agent coordination. When multiple Steves work on the same task, they don't just independently execute, they actively coordinate to avoid conflicts and optimize workload distribution. Tell three agents to build a castle and they'll automatically partition the structure, divide sections among themselves, and parallelize the construction.
+### 🤖 AI Возможности
+- **Понимание естественного языка** через Ollama
+- **Контекстное планирование задач**
+- **Адаптивное поведение** в зависимости от ситуации
+- **Память о выполненных действиях**
 
-The agents aren't following predefined scripts. They're operating off natural language instructions, which means:
-- **Resource extraction** where agents determine optimal mining locations and strategies
-- **Autonomous building** with agents planning layouts and material usage
-- **Combat and defense** where agents assess threats and coordinate responses
-- **Exploration and gathering** with pathfinding and resource location
-- **Collaborative execution** with automatic workload balancing and conflict resolution
+### 🎮 Управление
+- **Команды в чате** - просто пишите `@Crafto [команда]`
+- **GUI интерфейс** для мониторинга
+- **Система производительности** с оптимизацией
+- **Отладочные инструменты**
 
-## How It Works
+## 📋 Требования
 
-Each Steve is basically running an agent loop. When you give a command:
+- **Minecraft 1.20.1**
+- **Minecraft Forge 47+**
+- **Java 17+**
+- **Ollama** (для AI функций)
+- **4GB+ RAM** (рекомендуется 8GB)
 
-1. It goes to an LLM; we're using Groq for fast inference
-2. The LLM breaks down your request into structured code
-3. Code gets executed using Minecraft's actual game mechanics
-4. If something fails, the agent asks the LLM to replan
+## 🚀 Установка
 
-## Multi-Agent Coordination
+### 1. Установка Ollama
 
-The interesting part is when you have multiple Steves working together. We built a coordination system so they don't step on each other's toes.
-
-When you tell several agents to build the same structure, they:
-- Automatically split it into sections
-- Each take a part
-- Don't place blocks in the same spot
-- Rebalance work if someone finishes early
-
-The coordination happens server-side through a manager that tracks active builds and assigns work. It's deterministic, so there's no race conditions or weird conflicts.
-
-## Setup
-
-**You need:**
-- Minecraft 1.20.1 with Forge
-- Java 17
-- An OpenAI API key (or Groq/Gemini if you prefer)
-
-**Installation:**
-1. Download the JAR from releases
-2. Put it in your `mods` folder
-3. Launch Minecraft
-4. Copy `config/steve-common.toml.example` to `config/steve-common.toml`
-5. Add your API key to the config
-
-Config looks like this:
-```toml
-[openai]
-apiKey = "your-api-key-here"
-model = "gpt-3.5-turbo"
-maxTokens = 1000
-temperature = 0.7
+#### Windows:
+```bash
+# Скачайте установщик с официального сайта
+# https://ollama.ai/download/windows
+# Запустите .exe файл и следуйте инструкциям
 ```
 
-Then just spawn a Steve with `/steve spawn Bob` and press K to start using them.
+#### macOS:
+```bash
+# Через Homebrew
+brew install ollama
 
-## How We Built This
-
-**Tech Stack:**
-- Minecraft Forge 47.2.0 for the modding framework
-- Java 17
-- Groq API for the agent reasoning (pluggable, also supports OpenAI and Gemini)
-- Standard Minecraft pathfinding for movement
-- Langchain
-
-**Architecture:**
-
-The core is in the agent package. Each Steve runs a ReAct-style loop:
-- Reason about what to do
-- Act by executing Java code
-- Observe the results
-- Repeat
-
-For memory, each Steve maintains a conversation history and context about the world. This gets injected into every LLM call so agents can handle follow-up commands without you repeating context.
-
-The collaborative building system was trickier. We had to build a manager that:
-- Divides structures into spatial sections
-- Assigns Steves to sections
-- Prevents conflicts when placing blocks
-- Handles reassignment when Steves finish
-
-It's all server-side, so there's no synchronization issues.
-
-**Project Structure:**
-```
-src/main/java/com/steve/ai/
-├── entity/          # Steve entity class, spawning, lifecycle
-├── ai/              # LLM clients (OpenAI, Groq, Gemini), prompt building
-├── action/          # Action classes for mine, build, combat, etc
-├── agent/           # Core agent loop and coordination
-├── memory/          # Context management and world state
-├── client/          # GUI (the Cursor-style panel)
-└── command/         # Minecraft commands (/steve spawn, etc)
+# Или скачайте с официального сайта
+# https://ollama.ai/download/mac
 ```
 
-If you want to understand how it works, start in the agent package. That's where the reasoning loop lives.
+#### Linux:
+```bash
+# Ubuntu/Debian
+curl -fsSL https://ollama.ai/install.sh | sh
 
-## Building From Source
+# Arch Linux
+yay -S ollama
 
-Standard Gradle stuff:
+# Или через snap
+sudo snap install ollama
+```
+
+### 2. Установка модели Qwen2.5:7b
+
+После установки Ollama, установите модель:
 
 ```bash
-git clone https://github.com/YuvDwi/Steve.git
-cd Steve
-./gradlew build
+# Запустите Ollama (если не запущен автоматически)
+ollama serve
+
+# В новом терминале установите модель
+ollama pull qwen2.5:7b
+
+# Проверьте установку
+ollama list
 ```
 
-Output JAR is in `build/libs/`.
+**Примечание:** Модель qwen2.5:7b весит около 4.7GB, убедитесь что у вас достаточно места.
 
-## Usage Examples
+### 3. Настройка Ollama
 
-Once you've got Steves spawned, just press K and start talking:
+Создайте файл конфигурации для оптимальной работы:
 
-```
-"mine 20 iron ore"
-"build a house near me"
-"help Alex with the tower"
-"defend me from zombies"
-"follow me"
-"gather wood from that forest"
-"make a cobblestone platform here"
-"attack that creeper"
+#### Windows:
+```bash
+# Создайте переменные среды
+setx OLLAMA_HOST "0.0.0.0:11434"
+setx OLLAMA_ORIGINS "*"
+setx OLLAMA_NUM_PARALLEL "2"
 ```
 
-The agents are pretty good at figuring out what you mean. You don't need to be super specific.
+#### macOS/Linux:
+```bash
+# Добавьте в ~/.bashrc или ~/.zshrc
+export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS="*"
+export OLLAMA_NUM_PARALLEL=2
 
-## Known Issues
+# Перезагрузите терминал или выполните
+source ~/.bashrc  # или ~/.zshrc
+```
 
-**The agents are only as smart as the LLM.** GPT-3.5 works but makes occasional weird decisions. GPT-4 is noticeably better at multi-step planning.
+### 4. Установка мода Crafto
 
-**No crafting yet.** Agents can mine and place blocks but can't craft tools. We're working on it.
+1. **Скачайте Minecraft Forge 1.20.1** с [официального сайта](https://files.minecraftforge.net/)
+2. **Установите Forge** и запустите Minecraft один раз
+3. **Скомпилируйте мод:**
+   ```bash
+   git clone https://github.com/iwizard7/minecraft_bot_Crafto.git
+   cd minecraft_bot_Crafto
+   ./gradlew build
+   ```
+4. **Скопируйте JAR файл** из `build/libs/` в папку `mods/` вашего Minecraft
+5. **Запустите Minecraft** с профилем Forge
 
-**Actions are synchronous.** If a Steve is mining, it can't do anything else until done. Planning to add proper async execution.
+## ⚙️ Настройка
 
-**Memory resets on restart.** Right now context only persists during a play session. We're adding persistent memory with a vector DB.
+### Конфигурация мода
 
-## What's Next
+Создайте файл `config/crafto-common.toml`:
 
-Things we're working on:
-- Crafting system so agents can make their own tools
-- Voice commands via Whisper API
-- Vector database for long-term memory
-- Async action execution for multitasking
-- More complex building templates
+```toml
+[ai]
+    # URL для Ollama API
+    ollama_url = "http://localhost:11434"
+    # Модель для использования
+    model_name = "qwen2.5:7b"
+    # Максимальное количество токенов в ответе
+    max_tokens = 512
+    # Температура генерации (0.0-1.0)
+    temperature = 0.7
 
-Goal is to make this actually useful for survival gameplay, not just a tech demo.
+[performance]
+    # Максимальное количество активных Crafto
+    max_active_craftos = 5
+    # Интервал обновления AI (в тиках)
+    ai_update_interval = 20
+    # Включить оптимизацию производительности
+    enable_optimization = true
 
-## Contributing
+[building]
+    # Максимальная высота строительства
+    max_build_height = 256
+    # Радиус строительства от игрока
+    build_radius = 100
+    # Включить коллаборативное строительство
+    collaborative_building = true
 
-If you want to add stuff:
-1. Fork the repo
-2. Make your changes
-3. Make sure it builds with `./gradlew build`
-4. Submit a PR
+[combat]
+    # Автоматическая защита игрока
+    auto_defend_player = true
+    # Радиус обнаружения угроз
+    threat_detection_radius = 20
+    # Приоритет целей (hostile, neutral, passive)
+    target_priority = ["hostile", "neutral"]
+```
 
-If you're adding new actions, update the prompt template in `PromptBuilder.java` so the LLM knows about them.
+### Проверка подключения
 
-## Why We Made This
+1. **Запустите Ollama:**
+   ```bash
+   ollama serve
+   ```
 
-We wanted to see if the Cursor model could work outside of coding. Turns out it translates pretty well. Same principles: deep environment integration, clear action primitives, persistent context.
+2. **Проверьте API:**
+   ```bash
+   curl http://localhost:11434/api/tags
+   ```
 
-Minecraft is actually a good testbed for agent research. Complex enough to be interesting, constrained enough that agents can actually succeed.
+3. **Запустите Minecraft** и создайте мир
 
-Plus it's just fun watching AIs build castles while you explore.
+4. **Протестируйте бота:**
+   ```
+   @Crafto hello
+   ```
 
-## Credits
+## 🎮 Использование
 
-- OpenAI for GPT
-- Minecraft Forge for the modding API
-- LangChain/AutoGPT for agent architecture inspiration
+### Основные команды
 
-## License
+#### Строительство:
+```
+@Crafto build house
+@Crafto build castle 20 15 25
+@Crafto build tower
+@Crafto build bridge to coordinates 100 64 200
+```
 
-MIT
+#### Боевые действия:
+```
+@Crafto kill 5 zombies
+@Crafto protect me
+@Crafto attack nearest hostile mob
+@Crafto defend this area
+```
 
-## Issues
+#### Управление:
+```
+@Crafto follow me
+@Crafto stay here
+@Crafto go to coordinates 100 64 200
+@Crafto stop all tasks
+```
 
-Found a bug? Open an issue: https://github.com/YuvDwi/Steve/issues
+#### Информация:
+```
+@Crafto status
+@Crafto inventory
+@Crafto what are you doing
+```
+
+### Административные команды
+
+```
+/crafto spawn <name> - Создать нового Crafto
+/crafto remove <name> - Удалить Crafto
+/crafto list - Список всех Crafto
+/crafto_performance stats - Статистика производительности
+/crafto_performance optimize true - Включить оптимизацию
+```
+
+## 🏗️ Доступные строения
+
+1. **house** - Простой дом (10x8x6)
+2. **castle** - Замок (30x20x15)
+3. **tower** - Башня (8x8x20)
+4. **bridge** - Мост (переменная длина)
+5. **wall** - Стена (переменная длина)
+6. **farm** - Ферма (15x15x3)
+7. **mine** - Шахта (10x10x глубина)
+8. **dock** - Причал (20x10x5)
+9. **lighthouse** - Маяк (6x6x25)
+10. **windmill** - Ветряная мельница (8x8x15)
+11. **church** - Церковь (15x25x12)
+12. **library** - Библиотека (12x12x8)
+13. **blacksmith** - Кузница (8x10x6)
+
+Все строения поддерживают настраиваемые размеры:
+```
+@Crafto build house 15 10 8  # ширина высота глубина
+```
+
+## 🔧 Устранение неполадок
+
+### Ollama не отвечает
+```bash
+# Проверьте статус
+ollama ps
+
+# Перезапустите сервис
+ollama serve
+
+# Проверьте порт
+netstat -an | grep 11434
+```
+
+### Модель не загружается
+```bash
+# Переустановите модель
+ollama rm qwen2.5:7b
+ollama pull qwen2.5:7b
+
+# Проверьте доступное место
+df -h
+```
+
+### Crafto не реагирует на команды
+1. Проверьте подключение к Ollama
+2. Убедитесь что модель загружена
+3. Проверьте конфигурацию мода
+4. Посмотрите логи Minecraft
+
+### Низкая производительность
+1. Увеличьте выделенную память Java: `-Xmx8G`
+2. Включите оптимизацию в конфиге
+3. Уменьшите количество активных Crafto
+4. Используйте более мощную модель или сервер
+
+## 📊 Мониторинг производительности
+
+### Команды мониторинга:
+```
+/crafto_performance stats - Общая статистика
+/crafto_performance memory - Использование памяти
+/crafto_performance ai - Статистика AI запросов
+/crafto_performance tasks - Активные задачи
+```
+
+### Оптимизация:
+- **Батчинг запросов** - группировка AI запросов
+- **Кэширование ответов** - сохранение частых команд
+- **Адаптивные интервалы** - динамическая частота обновлений
+- **Приоритизация задач** - важные задачи выполняются первыми
+
+## 🤝 Коллаборативное строительство
+
+Несколько Crafto могут работать над одним проектом:
+
+```
+@Crafto1 build castle
+@Crafto2 help with building
+@Crafto3 gather materials for building
+```
+
+Система автоматически:
+- Распределяет секции строительства
+- Координирует действия ботов
+- Предотвращает конфликты размещения блоков
+- Синхронизирует прогресс
+
+## 📝 Логирование и отладка
+
+### Включение подробных логов:
+```toml
+[debug]
+    enable_debug_logging = true
+    log_ai_requests = true
+    log_pathfinding = true
+    log_building_actions = true
+```
+
+### Полезные логи:
+- `logs/crafto-ai.log` - Основные события
+- `logs/crafto-performance.log` - Метрики производительности
+- `logs/crafto-debug.log` - Отладочная информация
+
+## 🔄 Обновления
+
+Для обновления мода:
+1. Остановите сервер/клиент
+2. Скомпилируйте новую версию
+3. Замените JAR файл в папке mods
+4. Запустите игру
+
+Конфигурация сохраняется между обновлениями.
+
+## 🆘 Поддержка
+
+При возникновении проблем:
+1. Проверьте логи Minecraft
+2. Убедитесь что Ollama работает
+3. Проверьте конфигурацию
+4. Создайте issue в репозитории с подробным описанием
+
+## 📄 Лицензия
+
+MIT License - см. файл LICENSE
+
+---
+
+**Добро пожаловать в мир Crafto AI!** 🎮✨
+
+*Создавайте, сражайтесь и исследуйте вместе с вашими AI компаньонами!*
