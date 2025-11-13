@@ -64,11 +64,11 @@ tasks.named('jar', Jar).configure {
     manifest {
         attributes([
             'Specification-Title': 'Crafto AI Mod',
-            'Specification-Vendor': 'Crafto AI',
+            'Specification-Vendor': 'iwizard7',
             'Specification-Version': '1',
             'Implementation-Title': project.name,
             'Implementation-Version': project.jar.archiveVersion,
-            'Implementation-Vendor': 'Crafto AI'
+            'Implementation-Vendor': 'iwizard7'
         ])
     }
 

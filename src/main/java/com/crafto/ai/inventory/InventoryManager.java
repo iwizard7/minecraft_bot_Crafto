@@ -13,15 +13,15 @@ public class InventoryManager {
     private static final int MIN_BLOCKS_THRESHOLD = 50; // Пополнять когда меньше 50 блоков
     private static final int REFILL_AMOUNT = 1000; // Пополнять на 1000 блоков (неограниченно для ботов)
     
-    // Виртуальный инвентарь для каждого Steve (UUID -> Block -> количество)
+    // Виртуальный инвентарь для каждого Crafto (UUID -> Block -> количество)
     private static final Map<String, Map<Block, Integer>> VIRTUAL_INVENTORIES = new ConcurrentHashMap<>();
     
     /**
-     * Получает виртуальный инвентарь Steve
+     * Получает виртуальный инвентарь Crafto
      */
     private static Map<Block, Integer> getInventory(CraftoEntity crafto) {
-        String steveId = crafto.getUUID().toString();
-        return VIRTUAL_INVENTORIES.computeIfAbsent(steveId, k -> new HashMap<>());
+        String craftoId = crafto.getUUID().toString();
+        return VIRTUAL_INVENTORIES.computeIfAbsent(craftoId, k -> new HashMap<>());
     }
     
     /**
@@ -122,11 +122,11 @@ public class InventoryManager {
     }
     
     /**
-     * Очищает виртуальный инвентарь Steve (для отладки)
+     * Очищает виртуальный инвентарь Crafto (для отладки)
      */
     public static void clearInventory(CraftoEntity crafto) {
-        String steveId = crafto.getUUID().toString();
-        VIRTUAL_INVENTORIES.remove(steveId);
-        CraftoMod.LOGGER.info("Cleared virtual inventory for Steve '{}'", crafto.getCraftoName());
+        String craftoId = crafto.getUUID().toString();
+        VIRTUAL_INVENTORIES.remove(craftoId);
+        CraftoMod.LOGGER.info("Cleared virtual inventory for Crafto '{}'", crafto.getCraftoName());
     }
 }

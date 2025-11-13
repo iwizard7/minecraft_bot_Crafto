@@ -19,7 +19,7 @@ import java.util.Optional;
 public class PerformanceCommand {
     
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("steve_performance")
+        dispatcher.register(Commands.literal("crafto_performance")
             .requires(source -> source.hasPermission(2))
             .then(Commands.literal("stats")
                 .executes(PerformanceCommand::showStats))
@@ -56,7 +56,7 @@ public class PerformanceCommand {
         
         Map<String, Object> stats = pm.exportStatistics();
         
-        source.sendSuccess(() -> Component.literal("=== Steve AI Performance Statistics ==="), false);
+        source.sendSuccess(() -> Component.literal("=== Crafto AI Performance Statistics ==="), false);
         source.sendSuccess(() -> Component.literal("Total Requests: " + stats.get("totalRequests")), false);
         source.sendSuccess(() -> Component.literal("Cache Hits: " + stats.get("cacheHits")), false);
         source.sendSuccess(() -> Component.literal("Average Response Time: " + stats.get("averageResponseTime") + "ms"), false);

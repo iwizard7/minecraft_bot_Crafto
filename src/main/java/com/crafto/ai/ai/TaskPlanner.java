@@ -59,7 +59,7 @@ public class TaskPlanner {
             String enhancedPrompt = enhancePromptWithMemory(userPrompt, memory, command);
             
             String provider = CraftoConfig.AI_PROVIDER.get().toLowerCase();
-            CraftoMod.LOGGER.info("Requesting AI plan for Steve '{}' using {}: {}", agentName, provider, command);
+            CraftoMod.LOGGER.info("Requesting AI plan for Crafto '{}' using {}: {}", agentName, provider, command);
             
             // Используем оптимизированный запрос
             return performanceManager.processAIRequest(agentName, command, enhancedPrompt)

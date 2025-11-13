@@ -40,7 +40,7 @@ public class BuildStructureAction extends BaseAction {
     private List<Block> buildMaterials;
     private int ticksRunning;
     private int idleTicks; // Count ticks when no blocks are available
-    private CollaborativeBuildManager.CollaborativeBuild collaborativeBuild; // For multi-Steve collaboration
+    private CollaborativeBuildManager.CollaborativeBuild collaborativeBuild; // For multi-Crafto collaboration
     private boolean isCollaborative;
     private static final int MAX_TICKS = 120000;
     private static final int MAX_IDLE_TICKS = 200; // 10 seconds at 20 TPS
@@ -247,7 +247,7 @@ public class BuildStructureAction extends BaseAction {
                         return;
                     }
                     
-                    // If Steve has been idle too long, finish the action
+                    // If Crafto has been idle too long, finish the action
                     if (idleTicks > MAX_IDLE_TICKS) {
                         crafto.setFlying(false);
                         result = ActionResult.success("Completed work on " + structureType + " (" + 
@@ -255,7 +255,7 @@ public class BuildStructureAction extends BaseAction {
                         return;
                     }
                     
-                    // If build is not complete but this Steve has no more work, 
+                    // If build is not complete but this Crafto has no more work, 
                     // wait a bit and check again (maybe other sections become available)
                     break;
                 } else {
@@ -328,12 +328,12 @@ public class BuildStructureAction extends BaseAction {
             
             if (ticksRunning % 100 == 0 && collaborativeBuild.getBlocksPlaced() > 0) {
                 int percentComplete = collaborativeBuild.getProgressPercentage();
-                CraftoMod.LOGGER.info("{} build progress: {}/{} ({}%) - {} Steves working", 
+                CraftoMod.LOGGER.info("{} build progress: {}/{} ({}%) - {} Craftos working", 
                     structureType, 
                     collaborativeBuild.getBlocksPlaced(), 
                     collaborativeBuild.getTotalBlocks(), 
                     percentComplete,
-                    collaborativeBuild.participatingSteves.size());
+                    collaborativeBuild.participatingCraftos.size());
                 
                 // Логируем статистику инвентаря для отладки
                 if (ticksRunning % 200 == 0) {

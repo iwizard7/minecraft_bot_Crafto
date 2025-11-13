@@ -10,7 +10,7 @@ description='''
 AI-controlled Crafto entities that can follow natural language commands,
 mine resources, build structures, and behave like real players using Ollama AI.
 '''
-authors="Crafto AI Team"
+authors="iwizard7"
 displayURL="https://github.com/iwizard7/minecraft_bot_Crafto"
 
 [[dependencies.crafto]]

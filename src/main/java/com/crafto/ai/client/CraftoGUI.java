@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Side-mounted GUI panel for Steve agent interaction.
+ * Side-mounted GUI panel for Crafto agent interaction.
  * Inspired by Cursor's composer - slides in/out from the right side.
  * Now with scrollable message history!
  */
@@ -42,11 +42,11 @@ public class CraftoGUI {
     
     // Message bubble colors
     private static final int USER_BUBBLE_COLOR = 0xC04CAF50; // Green bubble for user
-    private static final int STEVE_BUBBLE_COLOR = 0xC02196F3; // Blue bubble for Steve
+    private static final int CRAFTO_BUBBLE_COLOR = 0xC02196F3; // Blue bubble for Crafto
     private static final int SYSTEM_BUBBLE_COLOR = 0xC0FF9800; // Orange bubble for system
 
     private static class ChatMessage {
-        String sender; // "You", "Steve", "Alex", "System", etc.
+        String sender; // "You", "Crafto", "Alex", "System", etc.
         String text;
         int bubbleColor;
         boolean isUser; // true if message from user
@@ -90,7 +90,7 @@ public class CraftoGUI {
             inputBox = new EditBox(mc.font, 0, 0, PANEL_WIDTH - 20, 20, 
                 Component.literal("Command"));
             inputBox.setMaxLength(256);
-            inputBox.setHint(Component.literal("Tell Steve what to do..."));
+            inputBox.setHint(Component.literal("Tell Crafto what to do..."));
             inputBox.setFocused(true);
         }
     }
@@ -115,10 +115,10 @@ public class CraftoGUI {
     }
 
     /**
-     * Add a Steve response to the history
+     * Add a Crafto response to the history
      */
-    public static void addSteveMessage(String craftoName, String text) {
-        addMessage(craftoName, text, STEVE_BUBBLE_COLOR, false);
+    public static void addCraftoMessage(String craftoName, String text) {
+        addMessage(craftoName, text, CRAFTO_BUBBLE_COLOR, false);
     }
 
     /**
@@ -168,7 +168,7 @@ public class CraftoGUI {
 
         int headerHeight = 35;
         graphics.fillGradient(panelX, panelY, screenWidth, headerHeight, HEADER_COLOR, HEADER_COLOR);
-        graphics.drawString(mc.font, "§lSteve AI", panelX + PANEL_PADDING, panelY + 8, TEXT_COLOR);
+        graphics.drawString(mc.font, "§lCrafto AI", panelX + PANEL_PADDING, panelY + 8, TEXT_COLOR);
         graphics.drawString(mc.font, "§7Press K to close", panelX + PANEL_PADDING, panelY + 20, 0xFF888888);
 
         // Message history area
@@ -389,10 +389,10 @@ public class CraftoGUI {
 
         if (command.toLowerCase().startsWith("spawn ")) {
             String name = command.substring(6).trim();
-            if (name.isEmpty()) name = "Steve";
+            if (name.isEmpty()) name = "Crafto";
             if (mc.player != null) {
-                mc.player.connection.sendCommand("steve spawn " + name);
-                addSystemMessage("Spawning Steve agent: " + name);
+                mc.player.connection.sendCommand("crafto spawn " + name);
+                addSystemMessage("Spawning Crafto agent: " + name);
             }
             return;
         }
@@ -400,20 +400,20 @@ public class CraftoGUI {
         List<String> targetCraftos = parseTargetCraftos(command);
         
         if (targetCraftos.isEmpty()) {
-            var steves = CraftoMod.getCraftoManager().getAllSteves();
-            if (!steves.isEmpty()) {
-                targetCraftos.add(steves.iterator().next().getCraftoName());
+            var craftos = CraftoMod.getCraftoManager().getAllCraftos();
+            if (!craftos.isEmpty()) {
+                targetCraftos.add(craftos.iterator().next().getCraftoName());
             } else {
-                // No Steves available
-                addSystemMessage("No Steve agents found! Use 'spawn <name>' to create one.");
+                // No Craftos available
+                addSystemMessage("No Crafto agents found! Use 'spawn <name>' to create one.");
                 return;
             }
         }
 
-        // Send command to all targeted Steves
+        // Send command to all targeted Craftos
         if (mc.player != null) {
             for (String craftoName : targetCraftos) {
-                mc.player.connection.sendCommand("steve tell " + craftoName + " " + command);
+                mc.player.connection.sendCommand("crafto tell " + craftoName + " " + command);
             }
             
             if (targetCraftos.size() > 1) {
@@ -428,18 +428,18 @@ public class CraftoGUI {
         List<String> targets = new ArrayList<>();
         String commandLower = command.toLowerCase();
         
-        if (commandLower.startsWith("all steves ") || commandLower.startsWith("all ") || 
+        if (commandLower.startsWith("all craftos ") || commandLower.startsWith("all ") || 
             commandLower.startsWith("everyone ") || commandLower.startsWith("everybody ")) {
-            var allSteves = CraftoMod.getCraftoManager().getAllSteves();
-            for (CraftoEntity crafto : allSteves) {
+            var allCraftos = CraftoMod.getCraftoManager().getAllCraftos();
+            for (CraftoEntity crafto : allCraftos) {
                 targets.add(crafto.getCraftoName());
             }
             return targets;
         }
         
-        var allSteves = CraftoMod.getCraftoManager().getAllSteves();
+        var allCraftos = CraftoMod.getCraftoManager().getAllCraftos();
         List<String> availableNames = new ArrayList<>();
-        for (CraftoEntity crafto : allSteves) {
+        for (CraftoEntity crafto : allCraftos) {
             availableNames.add(crafto.getCraftoName().toLowerCase());
         }
         
@@ -449,7 +449,7 @@ public class CraftoGUI {
             String firstWord = trimmed.split(" ")[0].toLowerCase();
             
             if (availableNames.contains(firstWord)) {
-                for (CraftoEntity crafto : allSteves) {
+                for (CraftoEntity crafto : allCraftos) {
                     if (crafto.getCraftoName().equalsIgnoreCase(firstWord)) {
                         targets.add(crafto.getCraftoName());
                         break;

@@ -14,8 +14,8 @@ bin/
 run/
 
 # Config with API keys
-config/steve-common.toml
-run/config/steve-common.toml
+config/crafto-common.toml
+run/config/crafto-common.toml
 
 # Misc
 *.log

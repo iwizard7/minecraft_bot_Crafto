@@ -14,14 +14,14 @@ import net.minecraftforge.event.ServerChatEvent;
 
 @Mod.EventBusSubscriber(modid = CraftoMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerEventHandler {
-    private static boolean stevesSpawned = false;
+    private static boolean craftosSpawned = false;
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ServerLevel level = (ServerLevel) player.level();
             CraftoManager manager = CraftoMod.getCraftoManager();
-            if (!stevesSpawned) {                manager.clearAllCraftos();
+            if (!craftosSpawned) {                manager.clearAllCraftos();
                 
                 // Clear structure registry for fresh spatial awareness
                 StructureRegistry.clear();
@@ -52,20 +52,20 @@ public class ServerEventHandler {
                     if (crafto != null) {                    }
                 }
                 
-                stevesSpawned = true;            }
+                craftosSpawned = true;            }
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        stevesSpawned = false;
+        craftosSpawned = false;
     }
 
     @SubscribeEvent
     public static void onServerChat(ServerChatEvent event) {
         String message = event.getMessage().getString();
 
-        // Check if message starts with @ followed by a Steve name
+        // Check if message starts with @ followed by a Crafto name
         if (message.startsWith("@")) {
             String[] parts = message.split(" ", 2);
             if (parts.length >= 2) {
@@ -76,7 +76,7 @@ public class ServerEventHandler {
                 CraftoEntity crafto = manager.getCrafto(targetName);
 
                 if (crafto != null) {
-                    // Process the command for the targeted Steve
+                    // Process the command for the targeted Crafto
                     new Thread(() -> {
                         crafto.getActionExecutor().processNaturalLanguageCommand(command);
                     }).start();

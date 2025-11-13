@@ -50,12 +50,12 @@ public class WorldKnowledge {
     private void scanBlocks() {
         nearbyBlocks = new HashMap<>();
         Level level = crafto.level();
-        BlockPos stevePos = crafto.blockPosition();
+        BlockPos craftoPos = crafto.blockPosition();
         
         for (int x = -scanRadius; x <= scanRadius; x += 2) {
             for (int y = -scanRadius; y <= scanRadius; y += 2) {
                 for (int z = -scanRadius; z <= scanRadius; z += 2) {
-                    BlockPos checkPos = stevePos.offset(x, y, z);
+                    BlockPos checkPos = craftoPos.offset(x, y, z);
                     BlockState state = level.getBlockState(checkPos);
                     Block block = state.getBlock();
                     

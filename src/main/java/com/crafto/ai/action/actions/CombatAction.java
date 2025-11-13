@@ -167,7 +167,7 @@ public class CombatAction extends BaseAction {
             return false;
         }
         
-        // Don't attack other Steves or players
+        // Don't attack other Craftos or players
         if (entity instanceof CraftoEntity || entity instanceof net.minecraft.world.entity.player.Player) {
             return false;
         }

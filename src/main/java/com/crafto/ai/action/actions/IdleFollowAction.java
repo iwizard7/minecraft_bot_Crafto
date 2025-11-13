@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Idle behavior for Steve - follows the nearest player when not working.
+ * Idle behavior for Crafto - follows the nearest player when not working.
  * This action runs continuously until a task is given.
  * Teleports to player if too far away.
  */

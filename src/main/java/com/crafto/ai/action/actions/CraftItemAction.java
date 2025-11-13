@@ -20,7 +20,7 @@ public class CraftItemAction extends BaseAction {
         ticksRunning = 0;
         
         // - Check if recipe exists
-        // - Check if Steve has ingredients
+        // - Check if Crafto has ingredients
         // - Navigate to crafting table if needed
         // - Use Baritone crafting integration
         

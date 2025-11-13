@@ -20,7 +20,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 public class CraftoEntity extends PathfinderMob {
-    private static final EntityDataAccessor<String> STEVE_NAME = 
+    private static final EntityDataAccessor<String> CRAFTO_NAME = 
         SynchedEntityData.defineId(CraftoEntity.class, EntityDataSerializers.STRING);
 
     private String craftoName;
@@ -32,7 +32,7 @@ public class CraftoEntity extends PathfinderMob {
 
     public CraftoEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
-        this.craftoName = "Steve";
+        this.craftoName = "Crafto";
         this.memory = new CraftoMemory(this);
         this.actionExecutor = new ActionExecutor(this);
         this.setCustomNameVisible(true);
@@ -59,7 +59,7 @@ public class CraftoEntity extends PathfinderMob {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(STEVE_NAME, "Steve");
+        this.entityData.define(CRAFTO_NAME, "Crafto");
     }
 
     @Override
@@ -80,7 +80,7 @@ public class CraftoEntity extends PathfinderMob {
 
     public void setCraftoName(String name) {
         this.craftoName = name;
-        this.entityData.set(STEVE_NAME, name);
+        this.entityData.set(CRAFTO_NAME, name);
         this.setCustomName(Component.literal(name));
     }
 

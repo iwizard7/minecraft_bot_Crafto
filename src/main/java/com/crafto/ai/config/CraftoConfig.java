@@ -75,12 +75,12 @@ public class CraftoConfig {
             .defineInRange("actionTickDelay", 10, 1, 100);
         
         ENABLE_CHAT_RESPONSES = builder
-            .comment("Allow Steves to respond in chat")
+            .comment("Allow Craftos to respond in chat")
             .define("enableChatResponses", true);
         
         MAX_ACTIVE_CRAFTOS = builder
-            .comment("Maximum number of Steves that can be active simultaneously (lower = better performance)")
-            .defineInRange("maxActiveSteves", 5, 1, 50);
+            .comment("Maximum number of Craftos that can be active simultaneously (lower = better performance)")
+            .defineInRange("maxActiveCraftos", 5, 1, 50);
         
         builder.pop();
 

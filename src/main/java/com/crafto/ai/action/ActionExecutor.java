@@ -30,7 +30,7 @@ public class ActionExecutor {
     
     private TaskPlanner getTaskPlanner() {
         if (taskPlanner == null) {
-            CraftoMod.LOGGER.info("Initializing TaskPlanner for Steve '{}'", crafto.getCraftoName());
+            CraftoMod.LOGGER.info("Initializing TaskPlanner for Crafto '{}'", crafto.getCraftoName());
             taskPlanner = new TaskPlanner();
         }
         return taskPlanner;
@@ -113,7 +113,7 @@ public class ActionExecutor {
      */
     private void sendToGUI(String craftoName, String message) {
         if (crafto.level().isClientSide) {
-            com.crafto.ai.client.CraftoGUI.addSteveMessage(craftoName, message);
+            com.crafto.ai.client.CraftoGUI.addCraftoMessage(craftoName, message);
         }
     }
 

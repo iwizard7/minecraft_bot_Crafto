@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 public class CraftoCommands {
     
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("steve")
+        dispatcher.register(Commands.literal("crafto")
             .then(Commands.literal("spawn")
                 .then(Commands.argument("name", StringArgumentType.string())
                     .executes(CraftoCommands::spawnCrafto)))
@@ -23,14 +23,14 @@ public class CraftoCommands {
                 .then(Commands.argument("name", StringArgumentType.string())
                     .executes(CraftoCommands::removeCrafto)))
             .then(Commands.literal("list")
-                .executes(CraftoCommands::listSteves))
+                .executes(CraftoCommands::listCraftos))
             .then(Commands.literal("stop")
                 .then(Commands.argument("name", StringArgumentType.string())
-                    .executes(CraftoCommands::stopSteve)))
+                    .executes(CraftoCommands::stopCrafto)))
             .then(Commands.literal("tell")
                 .then(Commands.argument("name", StringArgumentType.string())
                     .then(Commands.argument("command", StringArgumentType.greedyString())
-                        .executes(CraftoCommands::tellSteve))))
+                        .executes(CraftoCommands::tellCrafto))))
         );
         
         // Регистрируем команду производительности
@@ -60,10 +60,10 @@ public class CraftoCommands {
         
         CraftoEntity crafto = manager.spawnCrafto(serverLevel, spawnPos, name);
         if (crafto != null) {
-            source.sendSuccess(() -> Component.literal("Spawned Steve: " + name), true);
+            source.sendSuccess(() -> Component.literal("Spawned Crafto: " + name), true);
             return 1;
         } else {
-            source.sendFailure(Component.literal("Failed to spawn Steve. Name may already exist or max limit reached."));
+            source.sendFailure(Component.literal("Failed to spawn Crafto. Name may already exist or max limit reached."));
             return 0;
         }
     }
@@ -74,7 +74,7 @@ public class CraftoCommands {
         
         CraftoManager manager = CraftoMod.getCraftoManager();
         if (manager.removeCrafto(name)) {
-            source.sendSuccess(() -> Component.literal("Removed Steve: " + name), true);
+            source.sendSuccess(() -> Component.literal("Removed Crafto: " + name), true);
             return 1;
         } else {
             source.sendFailure(Component.literal("Crafto not found: " + name));
@@ -82,20 +82,20 @@ public class CraftoCommands {
         }
     }
 
-    private static int listSteves(CommandContext<CommandSourceStack> context) {
+    private static int listCraftos(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
         CraftoManager manager = CraftoMod.getCraftoManager();
         
         var names = manager.getCraftoNames();
         if (names.isEmpty()) {
-            source.sendSuccess(() -> Component.literal("No active Steves"), false);
+            source.sendSuccess(() -> Component.literal("No active Craftos"), false);
         } else {
-            source.sendSuccess(() -> Component.literal("Active Steves (" + names.size() + "): " + String.join(", ", names)), false);
+            source.sendSuccess(() -> Component.literal("Active Craftos (" + names.size() + "): " + String.join(", ", names)), false);
         }
         return 1;
     }
 
-    private static int stopSteve(CommandContext<CommandSourceStack> context) {
+    private static int stopCrafto(CommandContext<CommandSourceStack> context) {
         String name = StringArgumentType.getString(context, "name");
         CommandSourceStack source = context.getSource();
         
@@ -105,7 +105,7 @@ public class CraftoCommands {
         if (crafto != null) {
             crafto.getActionExecutor().stopCurrentAction();
             crafto.getMemory().clearTaskQueue();
-            source.sendSuccess(() -> Component.literal("Stopped Steve: " + name), true);
+            source.sendSuccess(() -> Component.literal("Stopped Crafto: " + name), true);
             return 1;
         } else {
             source.sendFailure(Component.literal("Crafto not found: " + name));
@@ -113,7 +113,7 @@ public class CraftoCommands {
         }
     }
 
-    private static int tellSteve(CommandContext<CommandSourceStack> context) {
+    private static int tellCrafto(CommandContext<CommandSourceStack> context) {
         String name = StringArgumentType.getString(context, "name");
         String command = StringArgumentType.getString(context, "command");
         CommandSourceStack source = context.getSource();

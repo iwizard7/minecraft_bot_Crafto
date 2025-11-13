@@ -112,7 +112,7 @@ public class StructureTemplateLoader {
         }
         
         try {
-            ResourceLocation resourceLocation = new ResourceLocation("steve", structureName);
+            ResourceLocation resourceLocation = new ResourceLocation("crafto", structureName);
             var templateManager = level.getStructureManager();
             var template = templateManager.get(resourceLocation);
             

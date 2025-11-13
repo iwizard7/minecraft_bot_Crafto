@@ -214,11 +214,11 @@ public class MineBlockAction extends BaseAction {
      * Check light level and place torch if too dark
      */
     private void placeTorchIfDark() {
-        BlockPos stevePos = crafto.blockPosition();
-        int lightLevel = crafto.level().getBrightness(net.minecraft.world.level.LightLayer.BLOCK, stevePos);
+        BlockPos craftoPos = crafto.blockPosition();
+        int lightLevel = crafto.level().getBrightness(net.minecraft.world.level.LightLayer.BLOCK, craftoPos);
         
         if (lightLevel < MIN_LIGHT_LEVEL) {
-            BlockPos torchPos = findTorchPosition(stevePos);
+            BlockPos torchPos = findTorchPosition(craftoPos);
             
             if (torchPos != null && crafto.level().getBlockState(torchPos).isAir()) {
                 crafto.level().setBlock(torchPos, Blocks.TORCH.defaultBlockState(), 3);
@@ -256,7 +256,7 @@ public class MineBlockAction extends BaseAction {
 
     /**
      * Mine forward in ONE DIRECTION - creates a straight tunnel!
-     * Steve progresses forward block by block
+     * Crafto progresses forward block by block
      */
     private void mineNearbyBlock() {
         BlockPos centerPos = currentTunnelPos;
@@ -322,7 +322,7 @@ public class MineBlockAction extends BaseAction {
      * Equip an iron pickaxe for mining
      */
     private void equipIronPickaxe() {
-        // Give Steve an iron pickaxe if he doesn't have one
+        // Give Crafto an iron pickaxe if he doesn't have one
         net.minecraft.world.item.ItemStack pickaxe = new net.minecraft.world.item.ItemStack(
             net.minecraft.world.item.Items.IRON_PICKAXE
         );

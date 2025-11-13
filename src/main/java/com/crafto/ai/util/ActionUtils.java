@@ -15,9 +15,9 @@ import java.util.List;
 public class ActionUtils {
 
     /**
-     * Find the nearest player to a Steve entity
+     * Find the nearest player to a Crafto entity
      *
-     * @param steve The Steve entity
+     * @param crafto The Crafto entity
      * @return The nearest player, or null if no players found
      */
     public static Player findNearestPlayer(CraftoEntity crafto) {

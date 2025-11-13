@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 /**
  * Handles client-side events, including disabling the narrator and checking key presses
  */
-@Mod.EventBusSubscriber(modid = "steve", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = "crafto", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
     
     private static boolean narratorDisabled = false;

@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AgentMemory {
     private static final Gson GSON = new Gson();
-    private static final String MEMORY_DIR = "config/steve_ai/memory/";
+    private static final String MEMORY_DIR = "config/crafto_ai/memory/";
     
     private final String agentName;
     private final Map<String, SuccessfulStrategy> strategies = new ConcurrentHashMap<>();

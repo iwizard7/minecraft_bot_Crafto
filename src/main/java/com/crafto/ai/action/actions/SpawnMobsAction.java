@@ -60,7 +60,7 @@ public class SpawnMobsAction extends BaseAction {
             return;
         }
         
-        // Spawn zombie near Steve
+        // Spawn zombie near Crafto
         double angle = crafto.getRandom().nextDouble() * 2 * Math.PI;
         double distance = 5 + crafto.getRandom().nextDouble() * 10; // 5-15 blocks away
         

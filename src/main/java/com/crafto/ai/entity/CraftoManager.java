@@ -18,18 +18,18 @@ public class CraftoManager {
         this.craftosByUUID = new ConcurrentHashMap<>();
     }
 
-    public CraftoEntity spawnCrafto(ServerLevel level, Vec3 position, String name) {        CraftoMod.LOGGER.info("Current active Steves: {}", activeCraftos.size());
+    public CraftoEntity spawnCrafto(ServerLevel level, Vec3 position, String name) {        CraftoMod.LOGGER.info("Current active Craftos: {}", activeCraftos.size());
         
         if (activeCraftos.containsKey(name)) {
             CraftoMod.LOGGER.warn("Crafto name '{}' already exists", name);
             return null;
-        }        int maxSteves = CraftoConfig.MAX_ACTIVE_CRAFTOS.get();        if (activeCraftos.size() >= maxSteves) {
-            CraftoMod.LOGGER.warn("Max Steve limit reached: {}", maxSteves);
+        }        int maxCraftos = CraftoConfig.MAX_ACTIVE_CRAFTOS.get();        if (activeCraftos.size() >= maxCraftos) {
+            CraftoMod.LOGGER.warn("Max Crafto limit reached: {}", maxCraftos);
             return null;
         }        CraftoEntity crafto;
         try {            CraftoMod.LOGGER.info("EntityType: {}", CraftoMod.CRAFTO_ENTITY.get());
             crafto = new CraftoEntity(CraftoMod.CRAFTO_ENTITY.get(), level);        } catch (Throwable e) {
-            CraftoMod.LOGGER.error("Failed to create Steve entity", e);
+            CraftoMod.LOGGER.error("Failed to create Crafto entity", e);
             CraftoMod.LOGGER.error("Exception class: {}", e.getClass().getName());
             CraftoMod.LOGGER.error("Exception message: {}", e.getMessage());
             e.printStackTrace();
@@ -39,9 +39,9 @@ public class CraftoManager {
         try {            crafto.setCraftoName(name);            crafto.setPos(position.x, position.y, position.z);            boolean added = level.addFreshEntity(crafto);            if (added) {
                 activeCraftos.put(name, crafto);
                 craftosByUUID.put(crafto.getUUID(), crafto);
-                CraftoMod.LOGGER.info("Successfully spawned Steve: {} with UUID {} at {}", name, crafto.getUUID(), position);                return crafto;
+                CraftoMod.LOGGER.info("Successfully spawned Crafto: {} with UUID {} at {}", name, crafto.getUUID(), position);                return crafto;
             } else {
-                CraftoMod.LOGGER.error("Failed to add Steve entity to world (addFreshEntity returned false)");
+                CraftoMod.LOGGER.error("Failed to add Crafto entity to world (addFreshEntity returned false)");
                 CraftoMod.LOGGER.error("=== SPAWN ATTEMPT FAILED ===");
             }
         } catch (Throwable e) {
@@ -71,14 +71,14 @@ public class CraftoManager {
     }
 
     public void clearAllCraftos() {
-        CraftoMod.LOGGER.info("Clearing {} Steve entities", activeCraftos.size());
+        CraftoMod.LOGGER.info("Clearing {} Crafto entities", activeCraftos.size());
         for (CraftoEntity crafto : activeCraftos.values()) {
             crafto.discard();
         }
         activeCraftos.clear();
         craftosByUUID.clear();    }
 
-    public Collection<CraftoEntity> getAllSteves() {
+    public Collection<CraftoEntity> getAllCraftos() {
         return Collections.unmodifiableCollection(activeCraftos.values());
     }
 
@@ -91,7 +91,7 @@ public class CraftoManager {
     }
 
     public void tick(ServerLevel level) {
-        // Clean up dead or removed Steves
+        // Clean up dead or removed Craftos
         Iterator<Map.Entry<String, CraftoEntity>> iterator = activeCraftos.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, CraftoEntity> entry = iterator.next();
@@ -100,7 +100,7 @@ public class CraftoManager {
             if (!crafto.isAlive() || crafto.isRemoved()) {
                 iterator.remove();
                 craftosByUUID.remove(crafto.getUUID());
-                CraftoMod.LOGGER.info("Cleaned up Steve: {}", entry.getKey());
+                CraftoMod.LOGGER.info("Cleaned up Crafto: {}", entry.getKey());
             }
         }
     }

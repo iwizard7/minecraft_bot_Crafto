@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 /**
- * Invisible overlay screen that captures input for the Steve GUI
+ * Invisible overlay screen that captures input for the Crafto GUI
  * This prevents game controls from activating while typing
  */
 public class CraftoOverlayScreen extends Screen {

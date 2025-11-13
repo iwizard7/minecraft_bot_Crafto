@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW;
 @Mod.EventBusSubscriber(modid = CraftoMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class KeyBindings {
     
-    public static final String KEY_CATEGORY = "key.categories.steve";
+    public static final String KEY_CATEGORY = "key.categories.crafto";
     
     public static KeyMapping TOGGLE_GUI;
 

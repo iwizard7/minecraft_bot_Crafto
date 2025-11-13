@@ -84,7 +84,7 @@ public class BuildingDebugger {
     
     // Тестирование строительства без AI
     public static void testBuildingSystem(CraftoEntity crafto, String command) {
-        CraftoMod.LOGGER.info("Testing building system for Steve '{}' with command: {}", crafto.getCraftoName(), command);
+        CraftoMod.LOGGER.info("Testing building system for Crafto '{}' with command: {}", crafto.getCraftoName(), command);
         
         try {
             ResponseParser.ParsedResponse response = createBuildResponse(command);

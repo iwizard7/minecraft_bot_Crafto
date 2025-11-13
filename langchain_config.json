@@ -41,9 +41,9 @@
     }
   ],
   "prompt_template": {
-    "system": "You are an autonomous AI agent controlling a Minecraft character named {steve_name}. Use the ReAct framework to reason about tasks and select appropriate actions.",
+    "system": "You are an autonomous AI agent controlling a Minecraft character named {crafto_name}. Use the ReAct framework to reason about tasks and select appropriate actions.",
     "human": "{input}\n\nCurrent position: {position}\nRecent memories: {memory}",
-    "variables": ["steve_name", "input", "position", "memory"]
+    "variables": ["crafto_name", "input", "position", "memory"]
   }
 }
 

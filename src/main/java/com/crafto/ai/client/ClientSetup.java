@@ -19,7 +19,7 @@ import com.crafto.ai.entity.CraftoEntity;
 @Mod.EventBusSubscriber(modid = CraftoMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
 
-    private static final ResourceLocation STEVE_TEXTURE = new ResourceLocation("minecraft", "textures/entity/player/wide/crafto.png");
+    private static final ResourceLocation CRAFTO_TEXTURE = new ResourceLocation("minecraft", "textures/entity/player/wide/crafto.png");
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {        event.enqueueWork(() -> {        });
@@ -34,7 +34,7 @@ public class ClientSetup {
             ) {
                 @Override
                 public ResourceLocation getTextureLocation(CraftoEntity entity) {
-                    return STEVE_TEXTURE;
+                    return CRAFTO_TEXTURE;
                 }
             }
         );    }

@@ -25,19 +25,19 @@ import org.slf4j.Logger;
 
 @Mod(CraftoMod.MODID)
 public class CraftoMod {
-    public static final String MODID = "steve";
+    public static final String MODID = "crafto";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = 
         DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
 
-    public static final RegistryObject<EntityType<CraftoEntity>> CRAFTO_ENTITY = ENTITIES.register("steve",
+    public static final RegistryObject<EntityType<CraftoEntity>> CRAFTO_ENTITY = ENTITIES.register("crafto",
         () -> EntityType.Builder.of(CraftoEntity::new, MobCategory.CREATURE)
             .sized(0.6F, 1.8F)
             .clientTrackingRange(10)
-            .build("steve"));
+            .build("crafto"));
 
-    private static CraftoManager steveManager;
+    private static CraftoManager craftoManager;
     private static PerformanceManager performanceManager;
 
     public CraftoMod() {
@@ -55,7 +55,7 @@ public class CraftoMod {
         if (net.minecraftforge.fml.loading.FMLEnvironment.dist.isClient()) {
             MinecraftForge.EVENT_BUS.register(com.crafto.ai.client.CraftoGUI.class);        }
         
-        steveManager = new CraftoManager();
+        craftoManager = new CraftoManager();
         performanceManager = PerformanceManager.getInstance();
         
         LOGGER.info("Crafto AI Mod initialized with performance optimizations");
@@ -78,7 +78,7 @@ public class CraftoMod {
     public void onCommandRegister(RegisterCommandsEvent event) {        CraftoCommands.register(event.getDispatcher());    }
 
     public static CraftoManager getCraftoManager() {
-        return steveManager;
+        return craftoManager;
     }
     
     public static PerformanceManager getPerformanceManager() {
