@@ -9,9 +9,8 @@ langchain-community>=0.0.20
 chromadb>=0.4.0
 sentence-transformers>=2.2.0
 
-# LLM providers
-openai>=1.0.0
-anthropic>=0.8.0
+# Local LLM provider only
+# ollama - no Python package needed, uses HTTP API
 
 # Memory and storage
 redis>=5.0.0

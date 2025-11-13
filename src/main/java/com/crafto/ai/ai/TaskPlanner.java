@@ -58,10 +58,9 @@ public class TaskPlanner {
             // Добавляем контекст из памяти
             String enhancedPrompt = enhancePromptWithMemory(userPrompt, memory, command);
             
-            String provider = CraftoConfig.AI_PROVIDER.get().toLowerCase();
-            CraftoMod.LOGGER.info("Requesting AI plan for Crafto '{}' using {}: {}", agentName, provider, command);
+            CraftoMod.LOGGER.info("Requesting AI plan for Crafto '{}' using Ollama: {}", agentName, command);
             
-            // Используем оптимизированный запрос
+            // Используем только Ollama
             return performanceManager.processAIRequest(agentName, command, enhancedPrompt)
                 .thenApply(response -> {
                     if (response == null) {
@@ -125,12 +124,7 @@ public class TaskPlanner {
         return enhanced.toString();
     }
 
-    private String getAIResponse(String provider, String systemPrompt, String userPrompt) {
-        // Упрощено - используем только Ollama
-        if (!provider.equals("local")) {
-            CraftoMod.LOGGER.warn("Only local Ollama provider is supported, switching to local");
-        }
-        
+    private String getAIResponse(String systemPrompt, String userPrompt) {
         return ollamaClient.sendRequest(systemPrompt, userPrompt);
     }
 

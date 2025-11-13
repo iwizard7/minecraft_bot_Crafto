@@ -1,10 +1,6 @@
 # Optimized Crafto AI configuration for MacBook M2 + Local Ollama
 # Copy this to crafto-common.toml
 
-[ai]
-    # Using local Ollama for privacy and no API costs
-    provider = "local"
-
 [ollama]
     baseUrl = "http://localhost:11434"
     # Optimized models for M2 MacBook (in order of speed):
@@ -13,13 +9,6 @@
     # 3. mistral:7b - BALANCED, good all-around
     model = "qwen2.5:7b"
     maxTokens = 400  # Reduced for faster responses
-    temperature = 0.7
-
-[openai]
-    # Not needed for local setup, but keep for fallback
-    apiKey = ""
-    model = "gpt-3.5-turbo"
-    maxTokens = 1000
     temperature = 0.7
 
 [behavior]

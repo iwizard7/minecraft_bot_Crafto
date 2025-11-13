@@ -14,7 +14,7 @@ export JAVA_HOME="$PWD/jdk-17.0.2.jdk/Contents/Home"
 export PATH="$JAVA_HOME/bin:$PATH"
 
 echo "✅ Java 17 ready"
-echo "✅ OpenAI API key configured (GPT-3.5)"
+echo "✅ Ollama configured for local LLM"
 echo ""
 echo "Starting Minecraft..."
 echo "⏳ First launch will download assets (~1-2 minutes)"
