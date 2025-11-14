@@ -67,7 +67,14 @@ public class CraftoMod {
         performanceManager.setMaxConcurrentRequests(3);
         performanceManager.setCacheExpirationTime(30 * 60 * 1000L); // 30 минут
         
+        // Инициализация генератора большого дома
+        event.enqueueWork(() -> {
+            com.crafto.ai.structure.BigHouseGenerator.initialize();
+            com.crafto.ai.structure.SchematicConverter.convertAllSchematics();
+        });
+        
         LOGGER.info("Performance optimization system initialized");
+        LOGGER.info("Structure templates initialized");
     }
 
     private void entityAttributes(EntityAttributeCreationEvent event) {

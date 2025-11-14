@@ -100,9 +100,6 @@ public class AdvancedStructureGenerators {
         // Строим стены и комнаты
         buildWallsWithRooms(blocks, start, width, height, depth, wallMaterial, rooms);
         
-        // Добавляем двери между комнатами
-        addInteriorDoors(blocks, rooms, start, width, depth);
-        
         // Добавляем лестницы если дом многоэтажный
         if (height > 4) {
             addStaircase(blocks, start, width, height, depth);
@@ -120,6 +117,9 @@ public class AdvancedStructureGenerators {
         // Добавляем входную дверь
         addMainEntrance(blocks, start, width, height, depth);
         
+        // Добавляем двери между комнатами (после всех стен)
+        addInteriorDoors(blocks, rooms, start, width, depth);
+        
         return blocks;
     }
     
@@ -127,31 +127,25 @@ public class AdvancedStructureGenerators {
     private static List<Room> planRooms(BlockPos start, int width, int height, int depth) {
         List<Room> rooms = new ArrayList<>();
         
-        // Первый этаж
+        // Первый этаж - простая планировка без пересечений
         if (width >= 8 && depth >= 8) {
-            // Гостиная (левая часть)
-            rooms.add(new Room(start.offset(1, 1, 1), width/2 - 1, 3, depth/2 - 1, "living"));
+            // Гостиная (левая половина)
+            rooms.add(new Room(start.offset(1, 1, 1), width/2 - 2, 3, depth - 2, "living"));
             
-            // Кухня (правая часть первого этажа)
-            rooms.add(new Room(start.offset(width/2, 1, 1), width/2 - 1, 3, depth/2 - 1, "kitchen"));
+            // Кухня (правая половина)
+            rooms.add(new Room(start.offset(width/2 + 1, 1, 1), width/2 - 2, 3, depth/2 - 2, "kitchen"));
             
-            // Ванная (маленькая комната)
-            rooms.add(new Room(start.offset(1, 1, depth/2), width/3, 3, depth/2 - 1, "bathroom"));
-            
-            // Кладовая
-            rooms.add(new Room(start.offset(width/3 + 1, 1, depth/2), width - width/3 - 2, 3, depth/2 - 1, "storage"));
+            // Ванная (правая задняя часть)
+            rooms.add(new Room(start.offset(width/2 + 1, 1, depth/2 + 1), width/2 - 2, 3, depth/2 - 2, "bathroom"));
         }
         
         // Второй этаж (если есть)
         if (height > 4) {
-            // Спальня 1
-            rooms.add(new Room(start.offset(1, 4, 1), width/2 - 1, 3, depth/2 - 1, "bedroom"));
+            // Спальня 1 (левая половина)
+            rooms.add(new Room(start.offset(1, 4, 1), width/2 - 2, 3, depth - 2, "bedroom"));
             
-            // Спальня 2
-            rooms.add(new Room(start.offset(width/2, 4, 1), width/2 - 1, 3, depth/2 - 1, "bedroom"));
-            
-            // Ванная на втором этаже
-            rooms.add(new Room(start.offset(1, 4, depth/2), width - 2, 3, depth/2 - 1, "bathroom"));
+            // Спальня 2 (правая половина)
+            rooms.add(new Room(start.offset(width/2 + 1, 4, 1), width/2 - 2, 3, depth - 2, "bedroom"));
         }
         
         return rooms;
@@ -201,20 +195,23 @@ public class AdvancedStructureGenerators {
     
     // Строительство стен комнаты
     private static void buildRoomWalls(List<BlockPlacement> blocks, Room room, Block wallMaterial) {
-        // Стены комнаты (только внутренние разделители)
-        for (int y = 0; y < room.height; y++) {
-            // Не строим полные стены, оставляем проходы для дверей
-            for (int x = 0; x < room.width; x++) {
-                if (x != room.width / 2) { // Оставляем проход для двери
-                    blocks.add(new BlockPlacement(room.start.offset(x, y, 0), wallMaterial));
-                    blocks.add(new BlockPlacement(room.start.offset(x, y, room.depth - 1), wallMaterial));
+        // Строим только внутренние разделительные стены между комнатами
+        for (int y = 1; y < room.height; y++) {
+            // Вертикальная разделительная стена (между левой и правой частями дома)
+            int wallX = room.start.getX() + room.width;
+            for (int z = room.start.getZ(); z < room.start.getZ() + room.depth; z++) {
+                if (z != room.start.getZ() + room.depth / 2) { // Оставляем проход для двери
+                    blocks.add(new BlockPlacement(new BlockPos(wallX, room.start.getY() + y, z), wallMaterial));
                 }
             }
             
-            for (int z = 1; z < room.depth - 1; z++) {
-                if (z != room.depth / 2) { // Оставляем проход для двери
-                    blocks.add(new BlockPlacement(room.start.offset(0, y, z), wallMaterial));
-                    blocks.add(new BlockPlacement(room.start.offset(room.width - 1, y, z), wallMaterial));
+            // Горизонтальная разделительная стена (между передней и задней частями)
+            if (room.type.equals("kitchen") || room.type.equals("bathroom")) {
+                int wallZ = room.start.getZ() - 1;
+                for (int x = room.start.getX(); x < room.start.getX() + room.width; x++) {
+                    if (x != room.start.getX() + room.width / 2) { // Оставляем проход для двери
+                        blocks.add(new BlockPlacement(new BlockPos(x, room.start.getY() + y, wallZ), wallMaterial));
+                    }
                 }
             }
         }
@@ -248,11 +245,28 @@ public class AdvancedStructureGenerators {
     
     // Добавление дверей между комнатами
     private static void addInteriorDoors(List<BlockPlacement> blocks, List<Room> rooms, BlockPos start, int width, int depth) {
-        for (Room room : rooms) {
-            // Добавляем дверь в центре одной из стен комнаты
-            BlockPos doorPos = room.start.offset(room.width / 2, 1, 0);
+        // Добавляем дверь между гостиной и кухней (вертикальная стена)
+        if (rooms.size() >= 2) {
+            BlockPos doorPos = start.offset(width / 2, 1, depth / 2);
+            
+            // Убираем блоки стены для двери
+            blocks.removeIf(bp -> bp.pos.equals(doorPos) || bp.pos.equals(doorPos.above()));
+            
+            // Добавляем дверь
             blocks.add(new BlockPlacement(doorPos, Blocks.OAK_DOOR));
             blocks.add(new BlockPlacement(doorPos.above(), Blocks.OAK_DOOR));
+        }
+        
+        // Добавляем дверь между кухней и ванной (горизонтальная стена)
+        if (rooms.size() >= 3) {
+            BlockPos doorPos2 = start.offset(3 * width / 4, 1, depth / 2);
+            
+            // Убираем блоки стены для двери
+            blocks.removeIf(bp -> bp.pos.equals(doorPos2) || bp.pos.equals(doorPos2.above()));
+            
+            // Добавляем дверь
+            blocks.add(new BlockPlacement(doorPos2, Blocks.OAK_DOOR));
+            blocks.add(new BlockPlacement(doorPos2.above(), Blocks.OAK_DOOR));
         }
     }
     
@@ -412,25 +426,26 @@ public class AdvancedStructureGenerators {
     
     // Главный вход
     private static void addMainEntrance(List<BlockPlacement> blocks, BlockPos start, int width, int height, int depth) {
-        // Двойная дверь в центре передней стены
+        // Одинарная дверь в центре передней стены
         int doorX = width / 2;
-        blocks.add(new BlockPlacement(start.offset(doorX - 1, 1, 0), Blocks.OAK_DOOR));
-        blocks.add(new BlockPlacement(start.offset(doorX - 1, 2, 0), Blocks.OAK_DOOR));
-        blocks.add(new BlockPlacement(start.offset(doorX, 1, 0), Blocks.OAK_DOOR));
-        blocks.add(new BlockPlacement(start.offset(doorX, 2, 0), Blocks.OAK_DOOR));
+        BlockPos doorPos = start.offset(doorX, 1, 0);
+        
+        // Убираем блоки стены для двери
+        blocks.removeIf(bp -> bp.pos.equals(doorPos) || bp.pos.equals(doorPos.above()));
+        
+        // Добавляем дверь (нижняя и верхняя части)
+        blocks.add(new BlockPlacement(doorPos, Blocks.OAK_DOOR));
+        blocks.add(new BlockPlacement(doorPos.above(), Blocks.OAK_DOOR));
         
         // Крыльцо
-        for (int x = doorX - 2; x <= doorX + 1; x++) {
-            for (int z = -2; z <= 0; z++) {
+        for (int x = doorX - 1; x <= doorX + 1; x++) {
+            for (int z = -2; z <= -1; z++) {
                 blocks.add(new BlockPlacement(start.offset(x, 0, z), Blocks.STONE_BRICKS));
             }
         }
         
-        // Колонны крыльца
-        for (int y = 1; y <= 3; y++) {
-            blocks.add(new BlockPlacement(start.offset(doorX - 2, y, -2), Blocks.STONE_BRICK_STAIRS));
-            blocks.add(new BlockPlacement(start.offset(doorX + 1, y, -2), Blocks.STONE_BRICK_STAIRS));
-        }
+        // Ступеньки к двери
+        blocks.add(new BlockPlacement(start.offset(doorX, 0, -1), Blocks.OAK_STAIRS));
     }
     
     // Особняк с множеством комнат

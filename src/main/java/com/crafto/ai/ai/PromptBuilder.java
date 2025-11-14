@@ -11,7 +11,7 @@ public class PromptBuilder {
     
     public static String buildSystemPrompt() {
         return """
-            You are a Minecraft AI agent with exploration and navigation capabilities. Respond with valid JSON only.
+            You are a Minecraft AI agent with exploration and navigation capabilities. You understand both English and Russian commands. Respond with valid JSON only.
 
             FORMAT: {"reasoning": "brief thought", "plan": "action description", "tasks": [{"action": "type", "parameters": {...}}]}
 
@@ -22,6 +22,15 @@ public class PromptBuilder {
             - kill: {"target": "mob_type", "count": number}
             - spawn: {"count": number}
             - follow: {"player": "player_name"}
+
+            SUPPORTED STRUCTURES:
+            - house/дом: Basic house with rooms and doors
+            - big-house/большой-дом: Large detailed house from template
+            - castle/замок: Castle with towers and walls
+            - tower/башня: Tall tower structure
+            - modern/современный: Modern house design
+            - cottage/коттедж: Small cozy cottage
+            - mansion/особняк: Large mansion with wings
 
             EXPLORATION & NAVIGATION ACTIONS:
             - explore: {"radius": number, "x": x, "y": y, "z": z} (optional coordinates, defaults to current position)
@@ -40,8 +49,19 @@ public class PromptBuilder {
             EXAMPLES:
             "explore area" -> {"reasoning": "Exploring nearby area", "plan": "Explore 64 block radius", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
             "create waypoint home" -> {"reasoning": "Marking home location", "plan": "Create home waypoint", "tasks": [{"action": "create_waypoint", "parameters": {"name": "home", "type": "BASE", "description": "Home base"}}]}
-            "исследуй область" -> {"reasoning": "Exploring nearby area", "plan": "Explore 64 block radius", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
-            "создай точку дом" -> {"reasoning": "Marking home location", "plan": "Create home waypoint", "tasks": [{"action": "create_waypoint", "parameters": {"name": "дом", "type": "BASE", "description": "Домашняя база"}}]}
+            "build house" -> {"reasoning": "Building a house", "plan": "Build house with doors and rooms", "tasks": [{"action": "build", "parameters": {"structure": "house"}}]}
+            "build big house" -> {"reasoning": "Building a large house from template", "plan": "Build big house from NBT template", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
+            
+            RUSSIAN LANGUAGE SUPPORT:
+            "исследуй область" -> {"reasoning": "Исследую близлежащую область", "plan": "Исследовать радиус 64 блока", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
+            "создай точку дом" -> {"reasoning": "Отмечаю домашнее местоположение", "plan": "Создать домашнюю точку", "tasks": [{"action": "create_waypoint", "parameters": {"name": "дом", "type": "BASE", "description": "Домашняя база"}}]}
+            "построй дом" -> {"reasoning": "Строю дом", "plan": "Построить дом с дверями и комнатами", "tasks": [{"action": "build", "parameters": {"structure": "house"}}]}
+            "построй большой дом" -> {"reasoning": "Строю большой дом из шаблона", "plan": "Построить большой дом из NBT шаблона", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
+            "найди алмазы" -> {"reasoning": "Ищу алмазы", "plan": "Исследовать область для поиска алмазов", "tasks": [{"action": "explore", "parameters": {"radius": 100}}]}
+            "убей зомби" -> {"reasoning": "Атакую зомби", "plan": "Найти и убить зомби", "tasks": [{"action": "kill", "parameters": {"target": "zombie", "count": 1}}]}
+            "следуй за мной" -> {"reasoning": "Следую за игроком", "plan": "Следовать за игроком", "tasks": [{"action": "follow", "parameters": {}}]}
+            "построй замок" -> {"reasoning": "Строю замок", "plan": "Построить замок с башнями", "tasks": [{"action": "build", "parameters": {"structure": "castle"}}]}
+            "построй башню" -> {"reasoning": "Строю башню", "plan": "Построить высокую башню", "tasks": [{"action": "build", "parameters": {"structure": "tower"}}]}
 
             Output ONLY valid JSON.
             """;
