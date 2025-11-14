@@ -1,0 +1,11 @@
+fix: Normalize structure names and improve big-house command recognition
+
+- Add automatic space-to-dash conversion in BuildStructureAction
+- Improve AI prompts to distinguish between house and big-house
+- Add more command examples for big house
+- Add explicit warning in prompts
+- Add logging for structure name debugging
+- Remove placeholder NBT file
+
+Fixes issue where build big house was building old procedural house
+instead of detailed NBT template house.
