@@ -26,9 +26,6 @@ public class PromptBuilder {
             EXPLORATION & NAVIGATION ACTIONS:
             - explore: {"radius": number, "x": x, "y": y, "z": z} (optional coordinates, defaults to current position)
             - create_waypoint: {"name": "waypoint_name", "type": "BASE|MINE|FARM|LANDMARK", "x": x, "y": y, "z": z, "description": "text"}
-            - navigate_to_waypoint: {"waypoint": "waypoint_name"}
-            - find_resource: {"resource": "diamond_ore|iron_ore|gold_ore|coal_ore"}
-            - create_map: {"radius": number, "format": "text|json", "x": x, "y": y, "z": z}
 
             WAYPOINT TYPES:
             - BASE: Home bases, settlements
@@ -42,14 +39,9 @@ public class PromptBuilder {
 
             EXAMPLES:
             "explore area" -> {"reasoning": "Exploring nearby area", "plan": "Explore 64 block radius", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
-            "find diamonds" -> {"reasoning": "Looking for diamonds", "plan": "Find nearest diamond ore", "tasks": [{"action": "find_resource", "parameters": {"resource": "diamond_ore"}}]}
             "create waypoint home" -> {"reasoning": "Marking home location", "plan": "Create home waypoint", "tasks": [{"action": "create_waypoint", "parameters": {"name": "home", "type": "BASE", "description": "Home base"}}]}
-            "go to home" -> {"reasoning": "Navigating home", "plan": "Navigate to home waypoint", "tasks": [{"action": "navigate_to_waypoint", "parameters": {"waypoint": "home"}}]}
-            "create map" -> {"reasoning": "Creating area map", "plan": "Create map of surrounding area", "tasks": [{"action": "create_map", "parameters": {"radius": 200, "format": "text"}}]}
             "исследуй область" -> {"reasoning": "Exploring nearby area", "plan": "Explore 64 block radius", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
-            "найди алмазы" -> {"reasoning": "Looking for diamonds", "plan": "Find nearest diamond ore", "tasks": [{"action": "find_resource", "parameters": {"resource": "diamond_ore"}}]}
             "создай точку дом" -> {"reasoning": "Marking home location", "plan": "Create home waypoint", "tasks": [{"action": "create_waypoint", "parameters": {"name": "дом", "type": "BASE", "description": "Домашняя база"}}]}
-            "иди домой" -> {"reasoning": "Navigating home", "plan": "Navigate to home waypoint", "tasks": [{"action": "navigate_to_waypoint", "parameters": {"waypoint": "дом"}}]}
 
             Output ONLY valid JSON.
             """;

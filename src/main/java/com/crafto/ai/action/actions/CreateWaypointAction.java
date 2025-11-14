@@ -7,6 +7,9 @@ import com.crafto.ai.exploration.Waypoint;
 import com.crafto.ai.exploration.WaypointType;
 import net.minecraft.core.BlockPos;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Действие для создания путевой точки
  */
@@ -40,18 +43,18 @@ public class CreateWaypointAction extends BaseAction {
     }
     
     private static Task createWaypointTask(String name, BlockPos pos, WaypointType type, String description) {
-        Task task = new Task("create_waypoint");
-        task.addParameter("name", name);
-        task.addParameter("x", pos.getX());
-        task.addParameter("y", pos.getY());
-        task.addParameter("z", pos.getZ());
-        task.addParameter("type", type.name());
-        task.addParameter("description", description);
-        return task;
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", name);
+        parameters.put("x", pos.getX());
+        parameters.put("y", pos.getY());
+        parameters.put("z", pos.getZ());
+        parameters.put("type", type.name());
+        parameters.put("description", description);
+        return new Task("create_waypoint", parameters);
     }
 
     @Override
-    public void start() {
+    protected void onStart() {
         try {
             Waypoint waypoint = crafto.getWaypointSystem().createWaypoint(waypointName, position, type, description);
             
@@ -59,28 +62,23 @@ public class CreateWaypointAction extends BaseAction {
                 waypointName, type.name(), position.getX(), position.getY(), position.getZ());
             
             crafto.sendChatMessage(message);
-            setResult(ActionResult.success("Путевая точка создана: " + waypointName));
+            result = ActionResult.success("Путевая точка создана: " + waypointName);
             
         } catch (Exception e) {
             String errorMsg = "Ошибка при создании путевой точки: " + e.getMessage();
             crafto.sendChatMessage(errorMsg);
-            setResult(ActionResult.failure(errorMsg));
+            result = ActionResult.failure(errorMsg);
         }
     }
 
     @Override
-    public void tick() {
-        // Действие выполняется мгновенно в start()
+    protected void onTick() {
+        // Действие выполняется мгновенно в onStart()
     }
 
     @Override
-    public void cancel() {
-        setResult(ActionResult.failure("Создание путевой точки отменено"));
-    }
-
-    @Override
-    public boolean isComplete() {
-        return getResult() != null;
+    protected void onCancel() {
+        result = ActionResult.failure("Создание путевой точки отменено");
     }
 
     @Override

@@ -7,6 +7,8 @@ import com.crafto.ai.exploration.ExplorationResult;
 import com.crafto.ai.exploration.ExplorationSystem;
 import net.minecraft.core.BlockPos;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -37,16 +39,16 @@ public class ExploreAreaAction extends BaseAction {
     }
     
     private static Task createExploreTask(BlockPos pos, int radius) {
-        Task task = new Task("explore");
-        task.addParameter("x", pos.getX());
-        task.addParameter("y", pos.getY());
-        task.addParameter("z", pos.getZ());
-        task.addParameter("radius", radius);
-        return task;
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("x", pos.getX());
+        parameters.put("y", pos.getY());
+        parameters.put("z", pos.getZ());
+        parameters.put("radius", radius);
+        return new Task("explore", parameters);
     }
 
     @Override
-    public void start() {
+    protected void onStart() {
         ExplorationSystem exploration = crafto.getExplorationSystem();
         
         crafto.sendChatMessage("Начинаю исследование области радиусом " + radius + " блоков...");
@@ -56,33 +58,29 @@ public class ExploreAreaAction extends BaseAction {
         isStarted = true;
         
         // Добавляем callback для обработки результата
-        explorationFuture.thenAccept(result -> {
-            if (result.isSuccess()) {
+        explorationFuture.thenAccept(explorationResult -> {
+            if (explorationResult.isSuccess()) {
                 String message = String.format("Исследование завершено! Найдено: %d областей, %d ресурсов", 
-                    result.getExploredAreas().size(), result.getNewResources().size());
+                    explorationResult.getExploredAreas().size(), explorationResult.getNewResources().size());
                 crafto.sendChatMessage(message);
                 
                 // Автоматически создаем путевые точки для ценных ресурсов
-                createWaypointsForResources(result);
+                createWaypointsForResources(explorationResult);
                 
-                setResult(ActionResult.success("Исследование области завершено успешно"));
+                result = ActionResult.success("Исследование области завершено успешно");
             } else {
-                crafto.sendChatMessage("Ошибка при исследовании: " + result.getErrorMessage());
-                setResult(ActionResult.failure("Ошибка исследования: " + result.getErrorMessage()));
+                crafto.sendChatMessage("Ошибка при исследовании: " + explorationResult.getErrorMessage());
+                result = ActionResult.failure("Ошибка исследования: " + explorationResult.getErrorMessage());
             }
         }).exceptionally(throwable -> {
             crafto.sendChatMessage("Критическая ошибка при исследовании!");
-            setResult(ActionResult.failure("Критическая ошибка: " + throwable.getMessage()));
+            result = ActionResult.failure("Критическая ошибка: " + throwable.getMessage());
             return null;
         });
     }
 
     @Override
-    public void tick() {
-        if (!isStarted) {
-            start();
-        }
-        
+    protected void onTick() {
         // Проверяем, завершилось ли исследование
         if (explorationFuture != null && explorationFuture.isDone()) {
             // Результат уже обработан в callback'е
@@ -90,24 +88,22 @@ public class ExploreAreaAction extends BaseAction {
         }
         
         // Можно добавить периодические обновления прогресса
-        if (tickCount % 100 == 0) { // каждые 5 секунд
+        // Используем System.currentTimeMillis() вместо tickCount
+        if (System.currentTimeMillis() % 5000 < 50) { // примерно каждые 5 секунд
             crafto.sendChatMessage("Исследование продолжается...");
         }
     }
 
     @Override
-    public void cancel() {
+    protected void onCancel() {
         if (explorationFuture != null && !explorationFuture.isDone()) {
             explorationFuture.cancel(true);
             crafto.sendChatMessage("Исследование отменено");
         }
-        setResult(ActionResult.failure("Исследование отменено"));
+        result = ActionResult.failure("Исследование отменено");
     }
 
-    @Override
-    public boolean isComplete() {
-        return getResult() != null;
-    }
+
 
     @Override
     public String getDescription() {
@@ -127,7 +123,7 @@ public class ExploreAreaAction extends BaseAction {
                     waypointName,
                     resource.getPosition(),
                     com.crafto.ai.exploration.WaypointType.RESOURCE_SITE,
-                    String.format("%s (найдено: %d)", resource.getResourceType(), resource.getQuantity())
+                    String.format("%s (найдено)", resource.getResourceType())
                 );
                 
                 crafto.sendChatMessage("Создана путевая точка: " + waypointName + " в " + resource.getPosition());

@@ -224,9 +224,6 @@ public class ActionExecutor {
             // Новые действия для системы исследования
             case "explore" -> new ExploreAreaAction(crafto, task);
             case "create_waypoint" -> new CreateWaypointAction(crafto, task);
-            case "navigate_to_waypoint" -> new NavigateToWaypointAction(crafto, task);
-            case "find_resource" -> new FindResourceAction(crafto, task);
-            case "create_map" -> new CreateMapAction(crafto, task);
             default -> {
                 CraftoMod.LOGGER.warn("Unknown action type: {}", task.getAction());
                 yield null;

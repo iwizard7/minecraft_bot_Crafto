@@ -350,39 +350,3 @@ public class Road {
     }
 }
 
-/**
- * Типы дорог
- */
-enum RoadType {
-    DIRT_PATH("Грунтовая тропа", 1.0, 30),
-    STONE_ROAD("Каменная дорога", 1.2, 60),
-    COBBLESTONE_ROAD("Булыжная дорога", 1.1, 50),
-    NETHER_HIGHWAY("Незер магистраль", 8.0, 100), // 1:8 соотношение
-    WATER_CANAL("Водный канал", 0.8, 40),
-    RAIL_TRACK("Железная дорога", 2.0, 80),
-    ICE_ROAD("Ледяная дорога", 1.5, 70),
-    BRIDGE("Мост", 1.0, 65),
-    TUNNEL("Туннель", 0.9, 55);
-    
-    private final String displayName;
-    private final double speedMultiplier;
-    private final int priority;
-    
-    RoadType(String displayName, double speedMultiplier, int priority) {
-        this.displayName = displayName;
-        this.speedMultiplier = speedMultiplier;
-        this.priority = priority;
-    }
-    
-    public String getDisplayName() {
-        return displayName;
-    }
-    
-    public double getSpeedMultiplier() {
-        return speedMultiplier;
-    }
-    
-    public int getPriority() {
-        return priority;
-    }
-}

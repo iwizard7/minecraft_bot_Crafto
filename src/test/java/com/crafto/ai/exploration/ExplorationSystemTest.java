@@ -112,14 +112,14 @@ public class ExplorationSystemTest {
         assertEquals("base", WaypointType.BASE.getDefaultIcon());
         assertEquals(100, WaypointType.BASE.getPriority());
         
-        assertTrue(WaypointType.BASE.getPriority() > WaypointType.TEMPORARY.getPriority());
+        assertTrue(WaypointType.BASE.getPriority() > WaypointType.LANDMARK.getPriority());
     }
     
     @Test
     void testRoadType() {
         assertEquals("Незер магистраль", RoadType.NETHER_HIGHWAY.getDisplayName());
         assertEquals(8.0, RoadType.NETHER_HIGHWAY.getSpeedMultiplier());
-        assertEquals(100, RoadType.NETHER_HIGHWAY.getPriority());
+        assertEquals(120, RoadType.NETHER_HIGHWAY.getPriority());
         
         assertTrue(RoadType.NETHER_HIGHWAY.getSpeedMultiplier() > RoadType.DIRT_PATH.getSpeedMultiplier());
     }
