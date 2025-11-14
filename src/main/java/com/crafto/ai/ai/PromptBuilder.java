@@ -24,13 +24,15 @@ public class PromptBuilder {
             - follow: {"player": "player_name"}
 
             SUPPORTED STRUCTURES:
-            - house/дом: Basic house with rooms and doors
-            - big-house/большой-дом: Large detailed house from template
+            - house/дом: Basic simple house (use ONLY for "build house", NOT for "build big house")
+            - big-house/большой-дом: Large detailed 2-story house from NBT template (use for "build big house", "build large house")
             - castle/замок: Castle with towers and walls
             - tower/башня: Tall tower structure
             - modern/современный: Modern house design
             - cottage/коттедж: Small cozy cottage
             - mansion/особняк: Large mansion with wings
+            
+            IMPORTANT: "big house" or "large house" = "big-house" structure (NOT "house"!)
 
             EXPLORATION & NAVIGATION ACTIONS:
             - explore: {"radius": number, "x": x, "y": y, "z": z} (optional coordinates, defaults to current position)
@@ -51,12 +53,15 @@ public class PromptBuilder {
             "create waypoint home" -> {"reasoning": "Marking home location", "plan": "Create home waypoint", "tasks": [{"action": "create_waypoint", "parameters": {"name": "home", "type": "BASE", "description": "Home base"}}]}
             "build house" -> {"reasoning": "Building a house", "plan": "Build house with doors and rooms", "tasks": [{"action": "build", "parameters": {"structure": "house"}}]}
             "build big house" -> {"reasoning": "Building a large house from template", "plan": "Build big house from NBT template", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
+            "build a big house" -> {"reasoning": "Building a large house from template", "plan": "Build big house from NBT template", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
+            "build large house" -> {"reasoning": "Building a large house from template", "plan": "Build big house from NBT template", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
             
             RUSSIAN LANGUAGE SUPPORT:
             "исследуй область" -> {"reasoning": "Исследую близлежащую область", "plan": "Исследовать радиус 64 блока", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
             "создай точку дом" -> {"reasoning": "Отмечаю домашнее местоположение", "plan": "Создать домашнюю точку", "tasks": [{"action": "create_waypoint", "parameters": {"name": "дом", "type": "BASE", "description": "Домашняя база"}}]}
-            "построй дом" -> {"reasoning": "Строю дом", "plan": "Построить дом с дверями и комнатами", "tasks": [{"action": "build", "parameters": {"structure": "house"}}]}
-            "построй большой дом" -> {"reasoning": "Строю большой дом из шаблона", "plan": "Построить большой дом из NBT шаблона", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
+            "построй дом" -> {"reasoning": "Строю простой дом", "plan": "Построить простой дом", "tasks": [{"action": "build", "parameters": {"structure": "house"}}]}
+            "построй большой дом" -> {"reasoning": "Строю большой дом из NBT шаблона", "plan": "Построить большой двухэтажный дом", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
+            "построй огромный дом" -> {"reasoning": "Строю большой дом из NBT шаблона", "plan": "Построить большой двухэтажный дом", "tasks": [{"action": "build", "parameters": {"structure": "big-house"}}]}
             "найди алмазы" -> {"reasoning": "Ищу алмазы", "plan": "Исследовать область для поиска алмазов", "tasks": [{"action": "explore", "parameters": {"radius": 100}}]}
             "убей зомби" -> {"reasoning": "Атакую зомби", "plan": "Найти и убить зомби", "tasks": [{"action": "kill", "parameters": {"target": "zombie", "count": 1}}]}
             "следуй за мной" -> {"reasoning": "Следую за игроком", "plan": "Следовать за игроком", "tasks": [{"action": "follow", "parameters": {}}]}

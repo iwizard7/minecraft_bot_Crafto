@@ -55,6 +55,12 @@ public class BuildStructureAction extends BaseAction {
     @Override
     protected void onStart() {
         structureType = task.getStringParameter("structure").toLowerCase();
+        
+        // Normalize structure name: "big house" -> "big-house"
+        structureType = structureType.replace(" ", "-");
+        
+        CraftoMod.LOGGER.info("Building structure: '{}'", structureType);
+        
         currentBlockIndex = 0;
         ticksRunning = 0;
         collaborativeBuild = CollaborativeBuildManager.findActiveBuild(structureType);
