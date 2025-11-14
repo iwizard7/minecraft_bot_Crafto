@@ -1,0 +1,38 @@
+{
+  "BUILD_HOUSE": [
+    {
+      "playerName": "TestPlayer",
+      "craftoName": "TestCrafto",
+      "task": "BUILD_HOUSE",
+      "rating": 4,
+      "comment": "Good job!",
+      "timestamp": "2025-11-13T17:55:21.848961"
+    },
+    {
+      "playerName": "TestPlayer",
+      "craftoName": "TestCrafto",
+      "task": "BUILD_HOUSE",
+      "rating": 4,
+      "comment": "Good job!",
+      "timestamp": "2025-11-13T17:56:57.564577"
+    }
+  ],
+  "BUILD": [
+    {
+      "playerName": "player1",
+      "craftoName": "crafto1",
+      "task": "BUILD",
+      "rating": 5,
+      "comment": "Excellent",
+      "timestamp": "2025-11-13T17:55:21.866462"
+    },
+    {
+      "playerName": "player1",
+      "craftoName": "crafto1",
+      "task": "BUILD",
+      "rating": 5,
+      "comment": "Excellent",
+      "timestamp": "2025-11-13T17:56:57.581233"
+    }
+  ]
+}

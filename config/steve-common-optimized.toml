@@ -1,0 +1,36 @@
+# Optimized Steve AI configuration for MacBook M2 + Local Ollama
+# Copy this to steve-common.toml
+
+[ai]
+    # Using local Ollama for privacy and no API costs
+    provider = "local"
+
+[ollama]
+    baseUrl = "http://localhost:11434"
+    # Optimized models for M2 MacBook (in order of speed):
+    # 1. qwen2.5:7b - FASTEST, great for coding tasks
+    # 2. llama3.2:3b - SMALLEST, good for simple tasks  
+    # 3. mistral:7b - BALANCED, good all-around
+    model = "qwen2.5:7b"
+    maxTokens = 400  # Reduced for faster responses
+    temperature = 0.7
+
+[openai]
+    # Not needed for local setup, but keep for fallback
+    apiKey = ""
+    model = "gpt-3.5-turbo"
+    maxTokens = 1000
+    temperature = 0.7
+
+[behavior]
+    # Optimized for M2 + local AI performance
+    actionTickDelay = 15  # Slightly slower to give Ollama time
+    enableChatResponses = true
+    maxActiveSteves = 2  # Conservative for local AI
+
+# M2 MacBook + Ollama Performance Tips:
+# 1. Install fastest models: `ollama pull qwen2.5:7b` or `ollama pull llama3.2:3b`
+# 2. Keep maxActiveSteves at 2-3 max for local AI
+# 3. Close other heavy apps when running Steve AI
+# 4. Monitor Activity Monitor - Ollama should use 4-6 CPU cores max
+# 5. If too slow, try llama3.2:3b (smaller model, faster inference)

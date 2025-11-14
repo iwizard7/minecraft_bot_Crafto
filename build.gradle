@@ -14,6 +14,10 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+test {
+    useJUnitPlatform()
+}
+
 minecraft {
     mappings channel: 'official', version: '1.20.1'
 
@@ -58,6 +62,12 @@ dependencies {
     
     // Baritone API (will need to be added manually to libs folder)
     // implementation files('libs/baritone-api-1.20.1.jar')
+    
+    // Test dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testImplementation 'org.mockito:mockito-core:5.1.1'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.1.1'
 }
 
 tasks.named('jar', Jar).configure {

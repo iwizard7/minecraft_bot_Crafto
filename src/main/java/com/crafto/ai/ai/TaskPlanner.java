@@ -140,6 +140,12 @@ public class TaskPlanner {
             case "follow" -> task.hasParameters("player");
             case "gather" -> task.hasParameters("resource", "quantity");
             case "build" -> task.hasParameters("structure", "blocks", "dimensions");
+            // Новые действия для системы исследования
+            case "explore" -> true; // Может работать с текущей позицией по умолчанию
+            case "create_waypoint" -> true; // Может использовать текущую позицию и автогенерированное имя
+            case "navigate_to_waypoint" -> task.hasParameters("waypoint");
+            case "find_resource" -> task.hasParameters("resource");
+            case "create_map" -> true; // Может работать с текущей позицией по умолчанию
             default -> {
                 CraftoMod.LOGGER.warn("Unknown action type: {}", action);
                 yield false;

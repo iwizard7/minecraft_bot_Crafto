@@ -1,0 +1,83 @@
+{
+  "TEST_-567312286_-983042536": {
+    "taskType": "TEST",
+    "context": "context1",
+    "strategy": "low_success",
+    "successRate": 0.2,
+    "lastUsed": "2025-11-13T17:56:57.59423",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:56:57.594238"
+  },
+  "BUILD_3556498": {
+    "taskType": "BUILD",
+    "context": "test",
+    "strategy": "strategy1",
+    "successRate": 1.0,
+    "lastUsed": "2025-11-13T17:55:21.864222",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:55:21.864235"
+  },
+  "BUILD_HOUSE_-1678124854": {
+    "taskType": "BUILD_HOUSE",
+    "context": "plains_biome",
+    "strategy": "gather_wood_first",
+    "successRate": 0.95,
+    "lastUsed": "2025-11-13T17:55:21.872863",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:55:21.872871"
+  },
+  "TEST_-567312286_-728300954": {
+    "taskType": "TEST",
+    "context": "context1",
+    "strategy": "high_success",
+    "successRate": 0.8,
+    "lastUsed": "2025-11-13T17:56:57.594846",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:56:57.594851"
+  },
+  "BUILD_HOUSE_-1678124854_1645970274": {
+    "taskType": "BUILD_HOUSE",
+    "context": "plains_biome",
+    "strategy": "gather_wood_first",
+    "successRate": 0.85,
+    "lastUsed": "2025-11-13T17:56:57.584962",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:56:57.58497"
+  },
+  "MINE_3556498_-412824801": {
+    "taskType": "MINE",
+    "context": "test",
+    "strategy": "strategy2",
+    "successRate": 0.9,
+    "lastUsed": "2025-11-13T17:56:57.57995",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:56:57.579955"
+  },
+  "TEST_-567312286": {
+    "taskType": "TEST",
+    "context": "context1",
+    "strategy": "low_success",
+    "successRate": 0.38,
+    "lastUsed": "2025-11-13T17:55:21.883864",
+    "usageCount": 2,
+    "creationTime": "2025-11-13T17:55:21.883106"
+  },
+  "BUILD_3556498_-412824802": {
+    "taskType": "BUILD",
+    "context": "test",
+    "strategy": "strategy1",
+    "successRate": 1.0,
+    "lastUsed": "2025-11-13T17:56:57.579326",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:56:57.579339"
+  },
+  "MINE_3556498": {
+    "taskType": "MINE",
+    "context": "test",
+    "strategy": "strategy2",
+    "successRate": 0.9,
+    "lastUsed": "2025-11-13T17:55:21.864705",
+    "usageCount": 1,
+    "creationTime": "2025-11-13T17:55:21.86472"
+  }
+}

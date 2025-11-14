@@ -1,0 +1,32 @@
+{
+  "player1": {
+    "playerName": "player1",
+    "actionFrequency": {
+      "action1": 2
+    },
+    "actionSuccessRates": {
+      "action1_context1": 0.6800000000000002
+    },
+    "contextualPreferences": {
+      "action1": "context1"
+    },
+    "lastInteraction": "2025-11-13T17:56:57.580922",
+    "firstInteraction": "2025-11-13T17:55:21.865543",
+    "totalInteractions": 2
+  },
+  "TestPlayer": {
+    "playerName": "TestPlayer",
+    "actionFrequency": {
+      "build_command": 2
+    },
+    "actionSuccessRates": {
+      "build_command_day_time": 0.6800000000000002
+    },
+    "contextualPreferences": {
+      "build_command": "day_time"
+    },
+    "lastInteraction": "2025-11-13T17:56:57.588936",
+    "firstInteraction": "2025-11-13T17:55:21.877707",
+    "totalInteractions": 2
+  }
+}

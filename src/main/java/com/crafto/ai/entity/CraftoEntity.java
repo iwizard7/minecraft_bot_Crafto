@@ -2,6 +2,9 @@ package com.crafto.ai.entity;
 
 import com.crafto.ai.action.ActionExecutor;
 import com.crafto.ai.memory.CraftoMemory;
+import com.crafto.ai.exploration.ExplorationSystem;
+import com.crafto.ai.exploration.WaypointSystem;
+import com.crafto.ai.exploration.MapSystem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -26,6 +29,9 @@ public class CraftoEntity extends PathfinderMob {
     private String craftoName;
     private CraftoMemory memory;
     private ActionExecutor actionExecutor;
+    private ExplorationSystem explorationSystem;
+    private WaypointSystem waypointSystem;
+    private MapSystem mapSystem;
     private int tickCounter = 0;
     private boolean isFlying = false;
     private boolean isInvulnerable = false;
@@ -35,8 +41,13 @@ public class CraftoEntity extends PathfinderMob {
         this.craftoName = "Crafto";
         this.memory = new CraftoMemory(this);
         this.actionExecutor = new ActionExecutor(this);
-        this.setCustomNameVisible(true);
         
+        // Инициализируем системы исследования и навигации
+        this.explorationSystem = new ExplorationSystem(level, craftoName);
+        this.waypointSystem = new WaypointSystem(level, craftoName);
+        this.mapSystem = new MapSystem(level, craftoName, explorationSystem, waypointSystem);
+        
+        this.setCustomNameVisible(true);
         this.isInvulnerable = true;
         this.setInvulnerable(true);
     }
@@ -94,6 +105,18 @@ public class CraftoEntity extends PathfinderMob {
 
     public ActionExecutor getActionExecutor() {
         return this.actionExecutor;
+    }
+    
+    public ExplorationSystem getExplorationSystem() {
+        return this.explorationSystem;
+    }
+    
+    public WaypointSystem getWaypointSystem() {
+        return this.waypointSystem;
+    }
+    
+    public MapSystem getMapSystem() {
+        return this.mapSystem;
     }
 
     @Override

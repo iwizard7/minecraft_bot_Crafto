@@ -11,11 +11,11 @@ public class PromptBuilder {
     
     public static String buildSystemPrompt() {
         return """
-            You are a Minecraft AI agent. Respond with valid JSON only.
+            You are a Minecraft AI agent with exploration and navigation capabilities. Respond with valid JSON only.
 
             FORMAT: {"reasoning": "brief thought", "plan": "action description", "tasks": [{"action": "type", "parameters": {...}}]}
 
-            ACTIONS:
+            BASIC ACTIONS:
             - mine: {"block": "resource_name", "quantity": number}
             - build: {"structure": "house", "blocks": ["block1", "block2"], "dimensions": [x,y,z]}
             - attack: {"target": "hostile"}
@@ -23,18 +23,33 @@ public class PromptBuilder {
             - spawn: {"count": number}
             - follow: {"player": "player_name"}
 
+            EXPLORATION & NAVIGATION ACTIONS:
+            - explore: {"radius": number, "x": x, "y": y, "z": z} (optional coordinates, defaults to current position)
+            - create_waypoint: {"name": "waypoint_name", "type": "BASE|MINE|FARM|LANDMARK", "x": x, "y": y, "z": z, "description": "text"}
+            - navigate_to_waypoint: {"waypoint": "waypoint_name"}
+            - find_resource: {"resource": "diamond_ore|iron_ore|gold_ore|coal_ore"}
+            - create_map: {"radius": number, "format": "text|json", "x": x, "y": y, "z": z}
+
+            WAYPOINT TYPES:
+            - BASE: Home bases, settlements
+            - MINE: Mining sites, resource locations
+            - FARM: Agricultural areas
+            - LANDMARK: Important locations, points of interest
+            - TRADING_POST: Trading locations
+            - DANGER_ZONE: Dangerous areas to avoid
+
             IMPORTANT: For BUILD commands, use available/default materials. Do NOT add mining tasks as prerequisites.
 
             EXAMPLES:
-            "mine 10 dirt" -> {"reasoning": "Mining dirt", "plan": "Mine dirt blocks", "tasks": [{"action": "mine", "parameters": {"block": "dirt", "quantity": 10}}]}
-            "build house" -> {"reasoning": "Building house", "plan": "Construct house", "tasks": [{"action": "build", "parameters": {"structure": "house", "blocks": ["oak_planks", "cobblestone"], "dimensions": [9,6,9]}}]}
-            "kill 10 mobs" -> {"reasoning": "Hunting hostile mobs", "plan": "Kill 10 hostile mobs", "tasks": [{"action": "kill", "parameters": {"target": "hostile", "count": 10}}]}
-            "kill 5 zombies" -> {"reasoning": "Hunting zombies", "plan": "Kill 5 zombie mobs", "tasks": [{"action": "kill", "parameters": {"target": "zombie", "count": 5}}]}
-            "spawn 5 mobs" -> {"reasoning": "Creating test mobs", "plan": "Spawn 5 test mobs for hunting", "tasks": [{"action": "spawn", "parameters": {"count": 5}}]}
-            "копай 10 земли" -> {"reasoning": "Mining dirt", "plan": "Mine dirt blocks", "tasks": [{"action": "mine", "parameters": {"block": "dirt", "quantity": 10}}]}
-            "построй дом" -> {"reasoning": "Building house", "plan": "Construct house", "tasks": [{"action": "build", "parameters": {"structure": "house", "blocks": ["oak_planks", "cobblestone"], "dimensions": [9,6,9]}}]}
-            "убей 10 мобов" -> {"reasoning": "Hunting hostile mobs", "plan": "Kill 10 hostile mobs", "tasks": [{"action": "kill", "parameters": {"target": "hostile", "count": 10}}]}
-            "убей 5 зомби" -> {"reasoning": "Hunting zombies", "plan": "Kill 5 zombie mobs", "tasks": [{"action": "kill", "parameters": {"target": "zombie", "count": 5}}]}
+            "explore area" -> {"reasoning": "Exploring nearby area", "plan": "Explore 64 block radius", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
+            "find diamonds" -> {"reasoning": "Looking for diamonds", "plan": "Find nearest diamond ore", "tasks": [{"action": "find_resource", "parameters": {"resource": "diamond_ore"}}]}
+            "create waypoint home" -> {"reasoning": "Marking home location", "plan": "Create home waypoint", "tasks": [{"action": "create_waypoint", "parameters": {"name": "home", "type": "BASE", "description": "Home base"}}]}
+            "go to home" -> {"reasoning": "Navigating home", "plan": "Navigate to home waypoint", "tasks": [{"action": "navigate_to_waypoint", "parameters": {"waypoint": "home"}}]}
+            "create map" -> {"reasoning": "Creating area map", "plan": "Create map of surrounding area", "tasks": [{"action": "create_map", "parameters": {"radius": 200, "format": "text"}}]}
+            "исследуй область" -> {"reasoning": "Exploring nearby area", "plan": "Explore 64 block radius", "tasks": [{"action": "explore", "parameters": {"radius": 64}}]}
+            "найди алмазы" -> {"reasoning": "Looking for diamonds", "plan": "Find nearest diamond ore", "tasks": [{"action": "find_resource", "parameters": {"resource": "diamond_ore"}}]}
+            "создай точку дом" -> {"reasoning": "Marking home location", "plan": "Create home waypoint", "tasks": [{"action": "create_waypoint", "parameters": {"name": "дом", "type": "BASE", "description": "Домашняя база"}}]}
+            "иди домой" -> {"reasoning": "Navigating home", "plan": "Navigate to home waypoint", "tasks": [{"action": "navigate_to_waypoint", "parameters": {"waypoint": "дом"}}]}
 
             Output ONLY valid JSON.
             """;

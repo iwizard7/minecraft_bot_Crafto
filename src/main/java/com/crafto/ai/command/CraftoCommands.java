@@ -35,6 +35,9 @@ public class CraftoCommands {
         
         // Регистрируем команду производительности
         PerformanceCommand.register(dispatcher);
+        
+        // Регистрируем команды исследования и навигации
+        registerExplorationCommands(dispatcher);
     }
 
     private static int spawnCrafto(CommandContext<CommandSourceStack> context) {
@@ -132,6 +135,166 @@ public class CraftoCommands {
             return 1;
         } else {
             source.sendFailure(Component.literal("Crafto not found: " + name));
+            return 0;
+        }
+    }
+    
+    private static void registerExplorationCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("crafto")
+            .then(Commands.literal("explore")
+                .then(Commands.argument("name", StringArgumentType.string())
+                    .then(Commands.argument("radius", com.mojang.brigadier.arguments.IntegerArgumentType.integer(16, 500))
+                        .executes(context -> {
+                            String name = StringArgumentType.getString(context, "name");
+                            int radius = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context, "radius");
+                            return executeExplorationCommand(context, name, "explore", radius);
+                        }))))
+            .then(Commands.literal("waypoint")
+                .then(Commands.literal("create")
+                    .then(Commands.argument("name", StringArgumentType.string())
+                        .then(Commands.argument("waypoint_name", StringArgumentType.string())
+                            .then(Commands.argument("type", StringArgumentType.string())
+                                .executes(context -> {
+                                    String name = StringArgumentType.getString(context, "name");
+                                    String waypointName = StringArgumentType.getString(context, "waypoint_name");
+                                    String type = StringArgumentType.getString(context, "type");
+                                    return executeWaypointCommand(context, name, "create", waypointName, type);
+                                })))))
+                .then(Commands.literal("navigate")
+                    .then(Commands.argument("name", StringArgumentType.string())
+                        .then(Commands.argument("waypoint_name", StringArgumentType.string())
+                            .executes(context -> {
+                                String name = StringArgumentType.getString(context, "name");
+                                String waypointName = StringArgumentType.getString(context, "waypoint_name");
+                                return executeWaypointCommand(context, name, "navigate", waypointName, "");
+                            })))))
+            .then(Commands.literal("find")
+                .then(Commands.argument("name", StringArgumentType.string())
+                    .then(Commands.argument("resource", StringArgumentType.string())
+                        .executes(context -> {
+                            String name = StringArgumentType.getString(context, "name");
+                            String resource = StringArgumentType.getString(context, "resource");
+                            return executeFindCommand(context, name, resource);
+                        }))))
+            .then(Commands.literal("map")
+                .then(Commands.literal("create")
+                    .then(Commands.argument("name", StringArgumentType.string())
+                        .then(Commands.argument("radius", com.mojang.brigadier.arguments.IntegerArgumentType.integer(50, 1000))
+                            .executes(context -> {
+                                String name = StringArgumentType.getString(context, "name");
+                                int radius = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context, "radius");
+                                return executeMapCommand(context, name, radius);
+                            })))))
+            .then(Commands.literal("stats")
+                .then(Commands.argument("name", StringArgumentType.string())
+                    .executes(context -> {
+                        String name = StringArgumentType.getString(context, "name");
+                        return executeStatsCommand(context, name);
+                    })))
+        );
+    }
+    
+    private static int executeExplorationCommand(CommandContext<CommandSourceStack> context, String craftoName, String action, int radius) {
+        CommandSourceStack source = context.getSource();
+        CraftoManager manager = CraftoMod.getCraftoManager();
+        CraftoEntity crafto = manager.getCrafto(craftoName);
+        
+        if (crafto == null) {
+            source.sendFailure(Component.literal("Crafto not found: " + craftoName));
+            return 0;
+        }
+        
+        if (source.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
+            ExplorationCommands.exploreArea(player, crafto, radius);
+            source.sendSuccess(() -> Component.literal("Started exploration with " + craftoName), true);
+            return 1;
+        } else {
+            source.sendFailure(Component.literal("Command must be run by a player"));
+            return 0;
+        }
+    }
+    
+    private static int executeWaypointCommand(CommandContext<CommandSourceStack> context, String craftoName, String action, String waypointName, String type) {
+        CommandSourceStack source = context.getSource();
+        CraftoManager manager = CraftoMod.getCraftoManager();
+        CraftoEntity crafto = manager.getCrafto(craftoName);
+        
+        if (crafto == null) {
+            source.sendFailure(Component.literal("Crafto not found: " + craftoName));
+            return 0;
+        }
+        
+        if (source.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
+            if ("create".equals(action)) {
+                ExplorationCommands.createWaypoint(player, crafto, waypointName, type);
+            } else if ("navigate".equals(action)) {
+                ExplorationCommands.navigateToWaypoint(player, crafto, waypointName);
+            }
+            source.sendSuccess(() -> Component.literal("Executed waypoint command with " + craftoName), true);
+            return 1;
+        } else {
+            source.sendFailure(Component.literal("Command must be run by a player"));
+            return 0;
+        }
+    }
+    
+    private static int executeFindCommand(CommandContext<CommandSourceStack> context, String craftoName, String resource) {
+        CommandSourceStack source = context.getSource();
+        CraftoManager manager = CraftoMod.getCraftoManager();
+        CraftoEntity crafto = manager.getCrafto(craftoName);
+        
+        if (crafto == null) {
+            source.sendFailure(Component.literal("Crafto not found: " + craftoName));
+            return 0;
+        }
+        
+        if (source.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
+            ExplorationCommands.findResources(player, crafto, resource);
+            source.sendSuccess(() -> Component.literal("Searching for " + resource + " with " + craftoName), true);
+            return 1;
+        } else {
+            source.sendFailure(Component.literal("Command must be run by a player"));
+            return 0;
+        }
+    }
+    
+    private static int executeMapCommand(CommandContext<CommandSourceStack> context, String craftoName, int radius) {
+        CommandSourceStack source = context.getSource();
+        CraftoManager manager = CraftoMod.getCraftoManager();
+        CraftoEntity crafto = manager.getCrafto(craftoName);
+        
+        if (crafto == null) {
+            source.sendFailure(Component.literal("Crafto not found: " + craftoName));
+            return 0;
+        }
+        
+        if (source.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
+            ExplorationCommands.exportMap(player, crafto, "PlayerMap_" + System.currentTimeMillis(), radius);
+            source.sendSuccess(() -> Component.literal("Creating map with " + craftoName), true);
+            return 1;
+        } else {
+            source.sendFailure(Component.literal("Command must be run by a player"));
+            return 0;
+        }
+    }
+    
+    private static int executeStatsCommand(CommandContext<CommandSourceStack> context, String craftoName) {
+        CommandSourceStack source = context.getSource();
+        CraftoManager manager = CraftoMod.getCraftoManager();
+        CraftoEntity crafto = manager.getCrafto(craftoName);
+        
+        if (crafto == null) {
+            source.sendFailure(Component.literal("Crafto not found: " + craftoName));
+            return 0;
+        }
+        
+        if (source.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
+            ExplorationCommands.showExplorationStats(player, crafto);
+            ExplorationCommands.showNavigationStats(player, crafto);
+            source.sendSuccess(() -> Component.literal("Showing stats for " + craftoName), true);
+            return 1;
+        } else {
+            source.sendFailure(Component.literal("Command must be run by a player"));
             return 0;
         }
     }
